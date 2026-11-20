@@ -2,7 +2,7 @@
 
 Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abrir `index.html` en el navegador o publicarla tal cual en GitHub Pages.
 
-> Marca: **KAIROS Analytics** (definida el 20-nov-2026). Se cambia en `BRAND` en `data.js` y en el `<title>` y `og:site_name` de `index.html`. El logotipo de tres barras es provisorio.
+> Marca: **KAIROS Analytics** (definida el 20-nov-2026). Se cambia en `BRAND` en `data.js` y en el `<title>` y `og:site_name` de `index.html`. Logo: cubo de celdas (propuesta 07), en `files/logo-claro.svg` y `files/logo-oscuro.svg`; elegido el 20-nov-2026 como provisorio.
 
 ## Recorrido de la página
 
@@ -52,7 +52,7 @@ Enlace directo: `index.html#demo-<clave>`. El botón "Copiar enlace" del modal l
 
 ## Pendiente
 
-- Definir logo y dominio (revisar disponibilidad de dominio y marca en INPI).
+- Dominio (revisar disponibilidad de dominio y marca en INPI). El logo actual (cubo 07) puede cambiar.
 - Contacto: las casillas están en `CONTACT_EMAILS` (`data.js`) y el formulario escribe a todas a la vez. Usa `mailto:`; para recibir mensajes sin depender del cliente de correo del visitante, conectar un servicio de formularios (Formspree, Getform o similar).
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
 - Sección "Quiénes confían en nosotros": comentada en `index.html` hasta tener autorizaciones.
