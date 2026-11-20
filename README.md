@@ -53,7 +53,7 @@ Enlace directo: `index.html#demo-<clave>`. El botón "Copiar enlace" del modal l
 ## Pendiente
 
 - Definir marca, logo y dominio.
-- Casilla de contacto (`CONTACT_EMAIL` en `data.js`): todavía lleva el nombre anterior. El formulario usa `mailto:`; para recibir mensajes sin depender del cliente de correo del visitante, conectar un servicio de formularios (Formspree, Getform o similar).
+- Contacto: las casillas están en `CONTACT_EMAILS` (`data.js`) y el formulario escribe a todas a la vez. Usa `mailto:`; para recibir mensajes sin depender del cliente de correo del visitante, conectar un servicio de formularios (Formspree, Getform o similar).
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
 - Sección "Quiénes confían en nosotros": comentada en `index.html` hasta tener autorizaciones.
 - Imagen para compartir (`og:image`, 1200 × 630) cuando haya logo.

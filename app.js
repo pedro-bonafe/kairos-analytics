@@ -405,15 +405,15 @@
   /* ------------------------------------------------------------------------
      Contacto: arma el correo y lo abre en el cliente de correo
      ------------------------------------------------------------------------ */
-  const mail = $("#ctaMail");
-  mail.textContent = CONTACT_EMAIL;
-  mail.href = `mailto:${CONTACT_EMAIL}`;
-  $("#copyMail").addEventListener("click", () => copy(CONTACT_EMAIL, "Correo copiado"));
+  const mails = $("#ctaMails");
+  mails.innerHTML = CONTACT_EMAILS.map((m) => `
+    <li><a href="mailto:${esc(m)}">${esc(m)}</a> <button class="link-btn" type="button" data-copy="${esc(m)}">copiar</button></li>`).join("");
+  mails.addEventListener("click", (e) => { const b = e.target.closest("[data-copy]"); if (b) copy(b.dataset.copy, "Correo copiado"); });
   $("#ctaForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const v = (id) => $(id).value.trim();
     const quien = [v("#ctaNombre"), v("#ctaOrg")].filter(Boolean).join(" · ");
     const subject = `Consulta · ${v("#ctaSector")}${quien ? " · " + quien : ""}`;
-    location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(v("#ctaMsg") + (quien ? `\n\n— ${quien}` : ""))}`;
+    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(v("#ctaMsg") + (quien ? `\n\n— ${quien}` : ""))}`;
   });
 })();

@@ -9,8 +9,8 @@
 // Cambiar acá cuando la marca esté definida (se reemplaza en nav y footer).
 const BRAND = "Peirone & Bonafé";
 
-// Casilla que abre el formulario de contacto. Reemplazar cuando exista la nueva.
-const CONTACT_EMAIL = "labotech.analytics@gmail.com";
+// Casillas de contacto: el formulario escribe a todas a la vez.
+const CONTACT_EMAILS = ["bonafepedro@gmail.com", "peirone.agustin@gmail.com"];
 
 // Estado real de cada caso. Es una referencia interna: la página no lo muestra.
 const ESTADOS = {

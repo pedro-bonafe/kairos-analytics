@@ -276,7 +276,8 @@ details.more p { margin: 12px 0 0; }
 .member-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- Contacto ---------- */
-.contact-direct { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; font-size: 15px; }
+.contact-direct { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 15px; }
+.contact-direct li { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
 .contact-direct a { color: var(--ink); font-weight: 500; }
 .contact-form { display: grid; gap: 8px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
