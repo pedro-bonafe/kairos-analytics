@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Peirone &amp; Bonafé · Costos, datos y software a medida</title>
+  <meta name="description" content="Integramos tus fuentes de datos, modelamos tus costos y tus finanzas, y desarrollamos el software con el que gestionás tu empresa u organismo." />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#07080c" media="(prefers-color-scheme: dark)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:title" content="Entendemos tus números. Construimos tus sistemas." />
+  <meta property="og:description" content="Costos y finanzas + datos, software e IA. Conectar, medir y gestionar, con demos interactivas de lo que construimos." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='0' y='16' width='7' height='8' fill='%236a5cff'/%3E%3Crect x='8.5' y='8' width='7' height='16' fill='%2319b8f0'/%3E%3Crect x='17' y='0' width='7' height='24' fill='%23ff7a59'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&family=Geist+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Tema guardado: se aplica antes de pintar para evitar el parpadeo -->
+  <script>try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <div class="wrap nav-bar">
+    <a class="logo" href="#top" aria-label="Inicio">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+        <rect x="0" y="16" width="7" height="8" fill="var(--g1)"/>
+        <rect x="8.5" y="8" width="7" height="16" fill="var(--g2)"/>
+        <rect x="17" y="0" width="7" height="24" fill="var(--g4)"/>
+      </svg>
+      <span data-brand>Peirone &amp; Bonafé</span>
+    </a>
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="#servicios">Qué hacemos</a>
+      <a href="#demos">Demos</a>
+      <a href="#casos">Casos</a>
+      <a href="#metodologia">Cómo trabajamos</a>
+      <a href="#equipo">Equipo</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Cambiar a tema oscuro" title="Cambiar tema">
+        <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-primary btn-sm nav-cta" href="#contacto">Agendar reunión</a>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#servicios">Qué hacemos</a>
+    <a href="#demos">Demos</a>
+    <a href="#casos">Sectores y casos</a>
+    <a href="#metodologia">Cómo trabajamos</a>
+    <a href="#por-que">Por qué nosotros</a>
+    <a href="#equipo">Equipo</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+</header>
+
+<main id="main">
+
+<!-- ============================ INICIO ============================ -->
+<section class="hero" id="top">
+  <div class="wrap split">
+    <div class="stack-text">
+      <div class="label">costos y finanzas + datos, software e IA</div>
+      <h1>Entendemos tus números. Construimos tus sistemas.</h1>
+      <p class="lead">Integramos tus fuentes de datos, modelamos tus costos y tus finanzas, y desarrollamos el software con el que gestionás tu empresa u organismo.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#contacto">Agendar una reunión</a>
+        <a class="btn btn-secondary" href="#demos">Probar las demos <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <figure class="graphic">
+      <div id="mosaic"></div>
+      <figcaption class="caption label-sm">
+        <span>de planillas sueltas</span>
+        <span>a un sistema que explica el negocio</span>
+      </figcaption>
+    </figure>
+  </div>
+  <div class="wrap">
+    <ul class="proof" id="proof" aria-label="Datos de nuestros proyectos"></ul>
+  </div>
+</section>
+
+<!-- ============================ QUÉ HACEMOS ============================ -->
+<section id="servicios">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">qué hacemos</div>
+      <h2>Tu empresa ya tiene los datos. Falta que trabajen para vos.</h2>
+      <p class="lead">Unimos dos oficios que casi nunca están en el mismo equipo: el análisis de costos y finanzas, y el desarrollo de software, datos e IA. Todo lo que hacemos se apoya en tres ejes que se refuerzan entre sí.</p>
+    </div>
+    <div class="ejes reveal">
+      <div class="ejes-tabs" role="tablist" aria-label="Los tres ejes" id="ejesTabs"></div>
+      <div class="ejes-panel" id="ejesPanel" role="tabpanel"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DEMOS ============================ -->
+<section class="section-alt" id="demos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">demos interactivas</div>
+      <h2>No te lo contamos: probalo.</h2>
+      <p class="lead">Cada demo reproduce el mecanismo de un sistema que construimos. Corren en tu navegador con datos ficticios, sin registrarte.</p>
+    </div>
+    <div class="demo-tiles" id="demoTiles"></div>
+  </div>
+</section>
+
+<!-- ============================ SECTORES Y CASOS ============================ -->
+<section id="casos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">sectores y casos</div>
+      <h2>Dos sectores que conocemos por dentro.</h2>
+      <p class="lead">En cada sector los problemas se repiten, y la forma de resolverlos también. Los casos se presentan sin el nombre del cliente.</p>
+    </div>
+    <div class="vtabs reveal" role="tablist" aria-label="Sectores" id="vtabs"></div>
+    <div id="vpanel" role="tabpanel"></div>
+  </div>
+</section>
+
+<!-- ============================ METODOLOGÍA ============================ -->
+<section class="section-alt" id="metodologia">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">cómo trabajamos</div>
+      <h2>Primero entendemos el negocio. Después programamos.</h2>
+      <p class="lead">Cada módulo se especifica y se valida con quien lo va a usar antes de escribir código. Fases cortas y de alcance cerrado: cada etapa entrega algo que ya se puede usar.</p>
+    </div>
+    <div class="method reveal" id="method">
+      <div class="method-track" aria-hidden="true"><i></i></div>
+      <ol class="ruled cols-5" id="pasosGrid"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ POR QUÉ NOSOTROS ============================ -->
+<section id="por-que">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">por qué nosotros</div>
+      <h2>Criterio financiero e ingeniería, sobre el mismo problema.</h2>
+      <p class="lead">Recibís un modelo correcto dentro de una herramienta que tu equipo usa todos los días, y que no depende de nadie en particular.</p>
+    </div>
+    <div class="ruled cols-3 reveal" id="diferencialesGrid"></div>
+  </div>
+</section>
+
+<!-- QUIÉNES CONFÍAN EN NOSOTROS
+     Sección pendiente: se agrega cuando haya autorizaciones para nombrar clientes. -->
+
+<!-- ============================ EQUIPO ============================ -->
+<section class="section-alt" id="equipo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">equipo</div>
+      <h2>Quiénes están detrás.</h2>
+    </div>
+    <div class="team reveal">
+      <article class="member">
+        <img src="files/agustin-480.jpg" alt="Agustín Peirone Cappri" width="120" height="120" loading="lazy" />
+        <div>
+          <h3>Agustín Peirone Cappri</h3>
+          <div class="label">costos, finanzas y gestión</div>
+          <p>Contador Público por la Universidad Nacional de Córdoba y Esp. en Costos y Gestión Empresarial por la Universidad Nacional de Rosario. Viene de la contabilidad financiera empresarial y, en los últimos años, se dedica a costos y gestión de pymes. Arma los modelos de costos, resultados y caja de cada empresa y los lleva a tableros y proyecciones para decidir con datos.</p>
+          <p class="member-links">
+            <a href="https://www.linkedin.com/in/agustin-peirone-cappri/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          </p>
+        </div>
+      </article>
+      <article class="member">
+        <img src="files/pedro-480.jpg" alt="Pedro Bonafé" width="120" height="120" loading="lazy" />
+        <div>
+          <h3>Pedro Bonafé</h3>
+          <div class="label">datos, software e inteligencia artificial</div>
+          <p>Mg. en Economía por la Universidad del CEMA y Lic. en Sociología por la Universidad Nacional de Villa María. Especializado en integración de datos, desarrollo de sistemas de gestión y agentes de IA. Diseña y construye las plataformas que centralizan la información de una organización, y combina la técnica con el análisis para que respondan a los objetivos del negocio.</p>
+          <p class="member-links">
+            <a href="https://www.linkedin.com/in/pedrobonafe/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            <a href="https://github.com/bonafepedro" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTACTO ============================ -->
+<section id="contacto">
+  <div class="wrap split split-even">
+    <div class="stack-text reveal">
+      <div class="label">contacto</div>
+      <h2>Que tus sistemas te digan cuánto ganás.</h2>
+      <p class="lead">Contanos cómo trabajás hoy y qué te gustaría saber de tu empresa. La primera conversación es para entender, no para vender.</p>
+      <p class="contact-direct label">
+        <a id="ctaMail" href="#"></a>
+        <button class="link-btn" type="button" id="copyMail">copiar</button>
+      </p>
+    </div>
+    <form class="contact-form reveal" id="ctaForm">
+      <div class="form-row">
+        <div>
+          <label for="ctaNombre">Nombre</label>
+          <input id="ctaNombre" name="nombre" type="text" autocomplete="name" required />
+        </div>
+        <div>
+          <label for="ctaOrg">Empresa u organismo</label>
+          <input id="ctaOrg" name="organizacion" type="text" autocomplete="organization" />
+        </div>
+      </div>
+      <label for="ctaSector">Sector</label>
+      <select id="ctaSector" name="sector">
+        <option>Industria</option>
+        <option>Gobierno · ministerio o secretaría</option>
+        <option>Gobierno · municipio</option>
+        <option>Otro</option>
+      </select>
+      <label for="ctaMsg">Contanos brevemente</label>
+      <textarea id="ctaMsg" name="mensaje" rows="4" required placeholder="Ej.: la caja la armamos en Excel cada semana y nunca coincide con el banco"></textarea>
+      <button class="btn btn-primary" type="submit">Escribinos <span class="arrow" aria-hidden="true">→</span></button>
+      <p class="label-sm form-note">Se abre tu programa de correo con el mensaje listo para enviar.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> <span data-brand>Peirone &amp; Bonafé</span> · Conectar, medir y gestionar.</span>
+    <span>Demos con datos ficticios. Casos presentados sin nombre de cliente.</span>
+  </div>
+</footer>
+
+<!-- ============================ MODAL DEMO ============================ -->
+<div class="modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-dialog">
+    <div class="modal-head">
+      <div>
+        <h3 id="demoTitle">Demo</h3>
+        <p id="demoSub"></p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost btn-sm" id="demoShare" type="button">Copiar enlace</button>
+        <button class="icon-btn" data-close aria-label="Cerrar demo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body" id="demoBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="demos.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
