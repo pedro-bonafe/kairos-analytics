@@ -7,7 +7,7 @@
    ========================================================================== */
 
 // Cambiar acá cuando la marca esté definida (se reemplaza en nav y footer).
-const BRAND = "Peirone & Bonafé";
+const BRAND = "KAIROS Analytics";
 
 // Casillas de contacto: el formulario escribe a todas a la vez.
 const CONTACT_EMAILS = ["bonafepedro@gmail.com", "peirone.agustin@gmail.com"];

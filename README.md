@@ -1,8 +1,8 @@
-# Landing · Peirone & Bonafé
+# Landing · KAIROS Analytics
 
 Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abrir `index.html` en el navegador o publicarla tal cual en GitHub Pages.
 
-> "Peirone & Bonafé" es un nombre provisorio. Se cambia en una línea: `BRAND` en `data.js` (y el `<title>` de `index.html`).
+> Marca: **KAIROS Analytics** (definida el 20-nov-2026). Se cambia en `BRAND` en `data.js` y en el `<title>` y `og:site_name` de `index.html`. El logotipo de tres barras es provisorio.
 
 ## Recorrido de la página
 
@@ -52,7 +52,7 @@ Enlace directo: `index.html#demo-<clave>`. El botón "Copiar enlace" del modal l
 
 ## Pendiente
 
-- Definir marca, logo y dominio.
+- Definir logo y dominio (revisar disponibilidad de dominio y marca en INPI).
 - Contacto: las casillas están en `CONTACT_EMAILS` (`data.js`) y el formulario escribe a todas a la vez. Usa `mailto:`; para recibir mensajes sin depender del cliente de correo del visitante, conectar un servicio de formularios (Formspree, Getform o similar).
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
 - Sección "Quiénes confían en nosotros": comentada en `index.html` hasta tener autorizaciones.
