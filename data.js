@@ -10,7 +10,7 @@
 const BRAND = "KAIROS Analytics";
 
 // Casillas de contacto: el formulario escribe a todas a la vez.
-const CONTACT_EMAILS = ["bonafepedro@gmail.com", "peirone.agustin@gmail.com"];
+const CONTACT_EMAILS = ["bonafepedro@gmail.com", "cr.apeirone@gmail.com"];
 
 // Estado real de cada caso. Es una referencia interna: la página no lo muestra.
 const ESTADOS = {
@@ -42,7 +42,7 @@ const SERVICIOS = [
     id: "integracion", verbo: "conectar",
     t: "Integración, Automatización e IA",
     frase: "De sistemas sueltos y planillas a una empresa que se gestiona con números.",
-    problema: "Hoy tus sistemas viven aislados: el ERP, el banco, la planta y el área comercial guardan cada uno su parte y no dialogan entre sí. Para obtener un dato útil hay que consultar varias planillas, exportar, copiar y pegar. Cuando el número llega, ya es viejo o no coincide con el de otra área.",
+    problema: "Hoy tus sistemas viven aislados: el ERP, los bancos, la planta y el área comercial guardan cada uno su parte y no dialogan entre sí. Para obtener un dato útil hay que consultar varias planillas, exportar, copiar y pegar. Cuando el número llega, ya es viejo o no coincide con el de otra área.",
     solucion: "Reunimos todas tus fuentes en una base de datos propia, que se actualiza sola. Sobre esa base armamos los tableros, automatizamos las tareas repetitivas y sumamos agentes de IA que leen documentos y responden consultas.",
     mejora: "Un mismo número para toda la empresa, disponible en el momento en que lo necesitás, y horas de trabajo manual que vuelven al equipo.",
     items: [
@@ -54,11 +54,11 @@ const SERVICIOS = [
   },
   {
     id: "finanzas", verbo: "medir",
-    t: "Consultoría de Costos y Finanzas",
-    frase: "Decidí con tus números reales, no con la planilla del mes pasado.",
-    problema: "Sabés cuánto vendés, pero no siempre cuánto ganás con cada producto ni cuánta caja vas a tener en dos meses. El costeo se revisa de vez en cuando o vive en una planilla que solo entiende quien la armó, y los precios y la producción se deciden con números desactualizados.",
-    solucion: "Armamos tu esquema de costeo, tu estado de resultados de gestión y tu flujo de fondos proyectado con criterio contable. Después los dejamos conectados a tus sistemas, para que se actualicen solos.",
-    mejora: "Sabés cuánto deja cada producto, cuánto necesitás vender para cubrir tus costos y cuándo puede faltar caja, con tiempo para decidir.",
+    t: "Consultoría en Costos, Rentabilidad y Finanzas",
+    frase: "Entendé y decidí con tus números reales, no con una planilla desactualizada.",
+    problema: "Sabés cuánto vendés, pero no siempre la rentabilidad de tus productos o servicios, si tus precios cubren los costos o cuánta plata vas a tener el mes que viene. Y muchas veces esos números viven en una planilla que solo entiende quien la armó.",
+    solucion: "Ordenamos tu estructura de costos, analizamos y medimos cuánto aporta cada unidad de negocio. Armamos tu estado de resultado y cash flow proyectado con tableros, y lo volcamos a una herramienta simple, que tu equipo puede usar de forma autónoma y que se actualiza con tus datos en tiempo real.",
+    mejora: "Sabés qué productos te convienen, cuál es el punto de equilibrio de tu empresa y cuándo puede faltar caja, con tiempo para decidir con previsibilidad.",
     items: [
       ["Esquemas de costeo", "Por producto, por línea y por centro de costos."],
       ["Modelo económico", "Estado de resultados de gestión, margen de contribución y punto de equilibrio."],
@@ -70,9 +70,9 @@ const SERVICIOS = [
     id: "software", verbo: "gestionar",
     t: "Software de Gestión a Medida",
     frase: "Sistemas adaptados a las necesidades de tu empresa.",
-    problema: "Los sistemas estándar resuelven lo general. Lo que distingue a tu empresa queda afuera: esa parte de la operación termina en planillas, en correos y en la memoria de quien la lleva. Y cuando el sistema no se adapta, es tu equipo el que tiene que cambiar su forma de trabajar.",
-    solucion: "Relevamos tu proceso real y construimos un sistema hecho para tu forma de trabajar, que convive con lo que ya usás. Es a medida porque parte de cómo opera tu empresa, y no de un producto armado para otras. Se entrega por módulos, cada uno validado con quien lo va a usar.",
-    mejora: "Tu operación sale de las planillas: cada pedido, lote o contrato queda registrado con su historial, y los informes y tableros salen del mismo sistema.",
+    problema: "Tu PyME creció y los sistemas estándar no resuelven tus problemas. Lo que distingue a tu empresa queda afuera: esa parte de la operación termina en muchas planillas sueltas, en correos y en la memoria de quien la lleva. Cuando el sistema no se adapta, es tu equipo el que tiene que cambiar su forma de trabajar.",
+    solucion: "Relevamos tu proceso real y construimos un sistema hecho para tu forma de trabajar, que se adapta y convive con lo que ya usás. Es un software a medida porque parte de cómo opera tu empresa, y no de un producto enlatado. Se entrega por módulos, cada uno validado con tu equipo de trabajo.",
+    mejora: "Tu operación ya no depende de las planillas: cada pedido, lote o contrato queda registrado con su historial, y tu stock siempre atualizado. Los informes y tableros que necesitas viven en el mismo sistema.",
     items: [
       ["Gestión", "Planta y proceso productivo, stock, pedidos, contratos, clientes, embarques y ventas."],
       ["Reportería", "Generación de informes y documentos."],
@@ -89,7 +89,7 @@ const SERVICIOS = [
    -------------------------------------------------------------------------- */
 const SECTORES = [
   {
-    id: "industria", nombre: "Industria", casos: "industria", grafico: "bars",
+    id: "industria", nombre: "Industrias", casos: "industrias", grafico: "bars",
     graficoEje: ["S1", "alerta en S9", "S13"],
     graficoNota: "flujo de fondos proyectado · datos de ejemplo",
     frase: "Tus costos, tu caja y tu operación, en un solo lugar y al día.",
@@ -153,11 +153,11 @@ const VERTICALES = [
     id: "industria",
     nombre: "Industria",
     bajada: "Producción y exportación",
-    intro: "Para empresas productivas cuyo ERP registra bien la operación pero no responde las preguntas de gestión, y para exportadores que comprometen producto por calidad y contrato.",
+    intro: "Para empresas productivas cuyo ERP registra bien la operación pero no responde las preguntas de decisión, y para exportadores que comprometen producto por calidad y contrato.",
     grupos: [
       {
         nombre: "Fabricante de maquinaria",
-        nota: "Costos y finanzas sobre el ERP",
+        nota: "Estado de resultado y finanzas sobre el ERP",
         proyectos: [
           {
             id: "costeo",
