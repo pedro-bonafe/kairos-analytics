@@ -7,7 +7,7 @@ Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abr
 ## Recorrido de la página
 
 1. **Inicio**: titular, mosaico animado "de disperso a ordenado" y franja de datos verificables con contador
-2. **Qué hacemos**: los tres ejes (Conectar, Medir, Gestionar) como pestañas; cada uno cuenta problema, lo que hacemos, lo que cambia y qué incluye
+2. **Qué hacemos**: los tres ejes (Conectar, Medir, Gestionar) como pestañas; cada uno cuenta el problema, lo que hacemos, la solución y qué incluye
 3. **Demos**: galería con las 7 demos interactivas; cada tarjeta abre la demo en un modal
 4. **Sectores y casos**: primer nivel Privado / Público (`AMBITOS`) y segundo nivel por subsector (Industrias, Comercios, Logística, Construcción; Ministerios, Municipios). Cada uno trae el contexto del sector, su gráfico animado (caja a 13 semanas o mapa de celdas), los tres ejes aplicados y las fichas de los casos; los subsectores sin caso publicado invitan al diagnóstico
 5. **Cómo trabajamos**: cinco pasos con una línea que se completa al entrar en pantalla

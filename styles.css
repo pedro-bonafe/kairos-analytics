@@ -510,3 +510,5 @@ table.t select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--l
 .modal-backdrop { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 @keyframes fadeIn { from { opacity: 0; } }
 @keyframes modalIn { from { opacity: 0; transform: translateY(24px) scale(.98); } }
+
+.lead-impacto { color: var(--ink); font-weight: 700; }

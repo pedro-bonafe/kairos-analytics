@@ -35,7 +35,7 @@ const EJES = "los tres ejes";
 
 /* --------------------------------------------------------------------------
    Los tres ejes. `id` se usa para etiquetar cada caso. Cada uno se cuenta
-   en tres pasos: el problema, lo que hacemos y lo que cambia.
+   en tres pasos: el problema, lo que hacemos y la solución.
    -------------------------------------------------------------------------- */
 const SERVICIOS = [
   {

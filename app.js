@@ -187,7 +187,7 @@
         <div class="eje-pasos">
           ${paso("01", "el problema", s.problema)}
           ${paso("02", "lo que hacemos", s.solucion)}
-          ${paso("03", "lo que cambia", s.mejora)}
+          ${paso("03", "la solución", s.mejora)}
         </div>
         <div class="label eje-incluye">qué incluye</div>
         <ul class="chips-list">${s.items.map((it) => `<li><b>${esc(it[0])}</b><span>${esc(it[1])}</span></li>`).join("")}</ul>
