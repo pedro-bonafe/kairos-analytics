@@ -230,14 +230,28 @@
     </article>`).join("");
 
   /* ------------------------------------------------------------------------
-     Sectores y casos: una pestaña por sector, con el contexto del sector y
-     sus casos.
+     Sectores y casos: primer nivel por ámbito (privado / público) y segundo
+     nivel por subsector, con el contexto del sector y sus casos.
      ------------------------------------------------------------------------ */
-  const vtabs = $("#vtabs"), vpanel = $("#vpanel");
-  const sector = Object.fromEntries(SECTORES.map((x) => [x.casos, x]));
+  const vtabs = $("#vtabs"), stabs = $("#stabs"), vpanel = $("#vpanel");
+  const sector = Object.fromEntries(SECTORES.map((x) => [x.id, x]));
   const servicio = Object.fromEntries(SERVICIOS.map((s) => [s.id, s]));
-  vtabs.innerHTML = VERTICALES.map((v, i) => `
-    <button class="vtab" role="tab" id="vtab-${v.id}" aria-controls="vpanel" data-v="${v.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"><b>${esc(v.nombre)}</b><span>${esc(v.bajada)}</span></button>`).join("");
+  vtabs.innerHTML = AMBITOS.map((a, i) => `
+    <button class="vtab" role="tab" id="atab-${a.id}" aria-controls="stabs" data-a="${a.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"><b>${esc(a.nombre)}</b><span>${esc(a.bajada)}</span></button>`).join("");
+  const ultimoDe = {}; // último subsector elegido en cada ámbito
+  function selectAmbito(id, focus, sub) {
+    $$(".vtab", vtabs).forEach((b) => {
+      const on = b.dataset.a === id;
+      b.setAttribute("aria-selected", on);
+      b.tabIndex = on ? 0 : -1;
+      if (on && focus) b.focus();
+    });
+    stabs.setAttribute("aria-labelledby", `atab-${id}`);
+    const subs = VERTICALES.filter((v) => v.ambito === id);
+    stabs.innerHTML = subs.map((v) => `
+      <button class="stab" role="tab" id="vtab-${v.id}" aria-controls="vpanel" data-v="${v.id}" title="${esc(v.bajada)}">${esc(v.nombre)}</button>`).join("");
+    selectVertical(sub || ultimoDe[id] || subs[0].id);
+  }
 
   function card(p) {
     return `
@@ -265,8 +279,8 @@
   }
 
   function renderVertical(id) {
-    const v = VERTICALES.find((x) => x.id === id), x = sector[id];
-    let html = `<div class="swap">`;
+    const v = VERTICALES.find((x) => x.id === id), x = sector[v.sector];
+    let html = `<div class="swap"><p class="sector-bajada label">${esc(v.bajada)}</p>`;
     if (x) html += `
       <div class="sector split">
         <div class="stack-text">
@@ -293,6 +307,14 @@
         </div>`).join("")}
       </div>`;
     html += `<div class="label sector-sub">casos</div>`;
+    if (!v.grupos.length) html += `
+      <div class="sin-caso">
+        <p>Todavía no publicamos un caso de ${esc(v.nombre.toLowerCase())}. Los problemas se parecen a los de otros sectores, y los sistemas de las demos se adaptan a tu operación.</p>
+        <div class="actions">
+          <a class="btn btn-primary btn-sm" href="#contacto">Hacer el diagnóstico</a>
+          <a class="btn btn-secondary btn-sm" href="#demos">Ver las demos <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>`;
     v.grupos.forEach((g) => {
       html += `<div class="subgroup">
         <div class="subgroup-head"><h3>${esc(g.nombre)}</h3><span>${esc(g.nota)}</span></div>
@@ -306,7 +328,10 @@
     $$(".graphic-panel", vpanel).forEach((el) => (io ? io.observe(el) : el.classList.add("in")));
   }
   function selectVertical(id, focus) {
-    $$(".vtab", vtabs).forEach((b) => {
+    const v = VERTICALES.find((x) => x.id === id);
+    if (!$(`[data-a="${v.ambito}"][aria-selected="true"]`, vtabs)) return selectAmbito(v.ambito, false, id);
+    ultimoDe[v.ambito] = id;
+    $$(".stab", stabs).forEach((b) => {
       const on = b.dataset.v === id;
       b.setAttribute("aria-selected", on);
       b.tabIndex = on ? 0 : -1;
@@ -340,8 +365,9 @@
     : null;
   $$(".reveal, .method").forEach((el) => (io ? io.observe(el) : el.classList.add("in")));
 
-  tabKeys(vtabs, ".vtab", (b, focus) => selectVertical(b.dataset.v, focus));
-  selectVertical(VERTICALES[0].id);
+  tabKeys(vtabs, ".vtab", (b, focus) => selectAmbito(b.dataset.a, focus));
+  tabKeys(stabs, ".stab", (b, focus) => selectVertical(b.dataset.v, focus));
+  selectAmbito(AMBITOS[0].id);
 
   /* ------------------------------------------------------------------------
      Modal de demos
@@ -409,11 +435,128 @@
   mails.innerHTML = CONTACT_EMAILS.map((m) => `
     <li><a href="mailto:${esc(m)}">${esc(m)}</a> <button class="link-btn" type="button" data-copy="${esc(m)}">copiar</button></li>`).join("");
   mails.addEventListener("click", (e) => { const b = e.target.closest("[data-copy]"); if (b) copy(b.dataset.copy, "Correo copiado"); });
-  $("#ctaForm").addEventListener("submit", (e) => {
-    e.preventDefault();
+
+  /* ------------------------------------------------------------------------
+     Diagnóstico inicial: 1 · datos de la empresa, 2 · cuestionario,
+     3 · resultado por eje, envío por correo y agenda.
+     ------------------------------------------------------------------------ */
+  const form = $("#ctaForm");
+  const opts = (arr) => arr.map((t) => `<option>${esc(t)}</option>`).join("");
+  $("#ctaModelo").innerHTML = opts(DIAGNOSTICO.modelos);
+  $("#ctaTamano").innerHTML = opts(DIAGNOSTICO.tamanos);
+  $("#diagPreguntas").innerHTML = DIAGNOSTICO.preguntas.map((p, i) => `
+    <fieldset class="diag-q">
+      <legend><span class="label-sm">${String(i + 1).padStart(2, "0")} · ${esc(verboServicio[p.eje])}</span>${esc(p.q)}</legend>
+      <div class="diag-opts">${p.o.map((t, j) => `
+        <label><input type="radio" name="q${i}" value="${j}" ${j === 0 ? "required" : ""} /><span>${esc(t)}</span></label>`).join("")}
+      </div>
+    </fieldset>`).join("");
+
+  const steps = $$(".diag-step", form), stepDots = $$("#diagSteps li");
+  let step = 0;
+  function goStep(n) {
+    step = n;
+    steps.forEach((s, i) => (s.hidden = i !== n));
+    stepDots.forEach((d, i) => { d.classList.toggle("on", i <= n); d.toggleAttribute("aria-current", i === n); });
+    if (n === 2) renderResultado();
+    const h = $("h3", steps[n]);
+    if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+    const top = form.getBoundingClientRect().top;
+    if (top < 80) scrollTo({ top: scrollY + top - 96, behavior: reduced ? "auto" : "smooth" });
+  }
+  // Valida solo los campos del paso visible
+  const pasoValido = (n) => $$("input, select, textarea", steps[n]).every((el) => el.checkValidity()) || (steps[n].querySelector(":invalid").reportValidity(), false);
+
+  function puntajes() {
+    const acc = {};
+    DIAGNOSTICO.preguntas.forEach((p, i) => {
+      const r = form.querySelector(`input[name="q${i}"]:checked`);
+      acc[p.eje] = acc[p.eje] || { suma: 0, max: 0 };
+      acc[p.eje].suma += r ? +r.value : 0;
+      acc[p.eje].max += 3;
+    });
+    return SERVICIOS.filter((s) => acc[s.id]).map((s) => {
+      const pct = Math.round(100 * acc[s.id].suma / acc[s.id].max);
+      const [, nivel, nota] = DIAGNOSTICO.niveles.find(([hasta]) => pct < hasta);
+      return { s, pct, nivel, nota };
+    });
+  }
+  function renderResultado() {
+    const res = puntajes();
+    const foco = res.reduce((a, b) => (b.pct < a.pct ? b : a));
+    $("#diagResultado").innerHTML = `
+      <div class="diag-ejes">${res.map((r) => `
+        <div class="diag-eje">
+          <div class="diag-eje-head"><b>${esc(cap(r.s.verbo))}</b><span class="label-sm">${esc(r.nivel)} · ${r.pct}%</span></div>
+          <div class="meter" role="img" aria-label="${esc(cap(r.s.verbo))}: ${r.pct} por ciento"><i style="width:${Math.max(r.pct, 3)}%"></i></div>
+          <span>${esc(r.nota)}</span>
+        </div>`).join("")}
+      </div>
+      <div class="diag-foco">
+        <div class="label">por dónde empezaríamos</div>
+        <b>${esc(cap(foco.s.verbo))} · ${esc(foco.s.t)}</b>
+        <p>${esc(foco.s.frase)}</p>
+      </div>`;
+    const cal = $("#diagAgenda");
+    cal.hidden = !CALENDAR_URL;
+    if (CALENDAR_URL) cal.href = CALENDAR_URL;
+    $("#diagAgendaNota").textContent = CALENDAR_URL
+      ? "Enviá el diagnóstico y elegí un horario: llegamos a la reunión con tus respuestas leídas."
+      : "Enviá el diagnóstico y proponé en el correo dos o tres horarios que te queden bien.";
+  }
+  function enviar() {
     const v = (id) => $(id).value.trim();
-    const quien = [v("#ctaNombre"), v("#ctaOrg")].filter(Boolean).join(" · ");
-    const subject = `Consulta · ${v("#ctaSector")}${quien ? " · " + quien : ""}`;
-    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(v("#ctaMsg") + (quien ? `\n\n— ${quien}` : ""))}`;
+    const si = (id, rotulo) => (v(id) ? `${rotulo}${v(id)}` : null); // null = campo vacío, se omite
+    const res = puntajes();
+    const lineas = [
+      "DATOS DE LA EMPRESA",
+      `Nombre: ${v("#ctaNombre")}`,
+      `Correo: ${v("#ctaEmail")}`,
+      `Empresa u organismo: ${v("#ctaOrg")}`,
+      si("#ctaCargo", "Cargo: "),
+      `Actividad: ${v("#ctaModelo")}`,
+      `Tamaño: ${v("#ctaTamano")}`,
+      si("#ctaSistemas", "Sistemas que usan: "),
+      si("#ctaMsg", "\nQué quiere resolver:\n"),
+      "",
+      "DIAGNÓSTICO",
+      ...res.map((r) => `${cap(r.s.verbo)}: ${r.nivel} (${r.pct}%)`),
+      "",
+      "RESPUESTAS",
+      ...DIAGNOSTICO.preguntas.map((p, i) => {
+        const r = form.querySelector(`input[name="q${i}"]:checked`);
+        return `${i + 1}. ${p.q}\n   ${r ? p.o[+r.value] : "sin respuesta"}`;
+      }),
+      CALENDAR_URL ? null : "\nHorarios que me quedan bien: ",
+    ].filter((x) => x !== null);
+    const subject = `Diagnóstico inicial · ${v("#ctaOrg")} · ${v("#ctaNombre")}`;
+    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lineas.join("\n"))}`;
+  }
+  form.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-step]");
+    if (!b) return;
+    const n = +b.dataset.step;
+    if (n > step && !pasoValido(step)) return;
+    goStep(n);
   });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (step < 2) { if (pasoValido(step)) goStep(step + 1); return; }
+    enviar();
+  });
+  goStep(0);
+
+  /* ------------------------------------------------------------------------
+     Quiénes confían en nosotros: se muestra solo si hay testimonios cargados
+     ------------------------------------------------------------------------ */
+  if (TESTIMONIOS.length) {
+    const sec = $("#confian");
+    $("#confianGrid").innerHTML = TESTIMONIOS.map((t) => `
+      <figure class="testimonio">
+        ${t.logo ? `<img src="${esc(t.logo)}" alt="${esc(t.org)}" loading="lazy" />` : `<div class="testimonio-org">${esc(t.org)}</div>`}
+        ${t.cita ? `<blockquote>${esc(t.cita)}</blockquote>` : ""}
+        ${t.autor ? `<figcaption><b>${esc(t.autor)}</b>${t.cargo ? `<span>${esc(t.cargo)} · ${esc(t.org)}</span>` : ""}</figcaption>` : ""}
+      </figure>`).join("");
+    sec.hidden = false;
+  }
 })();

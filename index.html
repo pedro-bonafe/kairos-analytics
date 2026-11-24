@@ -124,10 +124,11 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div class="label">sectores y casos</div>
-      <h2>Dos sectores que conocemos por dentro.</h2>
-      <p class="lead">En cada sector los problemas se repiten, y la forma de resolverlos también. Los casos se presentan sin el nombre del cliente.</p>
+      <h2>Del sector privado al público.</h2>
+      <p class="lead">De la metalúrgica al productor apícola, del comercio al municipio: en cada sector los problemas se repiten, y la forma de resolverlos también. Los casos se presentan sin el nombre del cliente.</p>
     </div>
-    <div class="vtabs reveal" role="tablist" aria-label="Sectores" id="vtabs"></div>
+    <div class="vtabs reveal" role="tablist" aria-label="Ámbitos" id="vtabs"></div>
+    <div class="stabs" role="tablist" aria-label="Sectores" id="stabs"></div>
     <div id="vpanel" role="tabpanel"></div>
   </div>
 </section>
@@ -159,8 +160,17 @@
   </div>
 </section>
 
-<!-- QUIÉNES CONFÍAN EN NOSOTROS
-     Sección pendiente: se agrega cuando haya autorizaciones para nombrar clientes. -->
+<!-- ============================ QUIÉNES CONFÍAN EN NOSOTROS ============================
+     Oculta hasta cargar TESTIMONIOS en data.js (solo clientes que autorizaron). -->
+<section id="confian" hidden>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="label">quiénes confían en nosotros</div>
+      <h2>Lo que dicen quienes ya trabajan con nosotros.</h2>
+    </div>
+    <div class="testimonios reveal" id="confianGrid"></div>
+  </div>
+</section>
 
 <!-- ============================ EQUIPO ============================ -->
 <section class="section-alt" id="equipo">
@@ -201,33 +211,75 @@
 <section id="contacto">
   <div class="wrap split split-even">
     <div class="stack-text reveal">
-      <div class="label">contacto</div>
+      <div class="label">diagnóstico inicial y reunión</div>
       <h2>Que tus sistemas te digan cuánto ganás.</h2>
-      <p class="lead">Contanos cómo trabajás hoy y qué te gustaría saber de tu empresa. La primera conversación es para entender, no para vender.</p>
+      <p class="lead">Antes de reunirnos, contanos de tu empresa y respondé un cuestionario de tres minutos. Te mostramos un primer diagnóstico en el momento y llegamos a la reunión sabiendo por dónde empezar.</p>
+      <ol class="diag-steps label" id="diagSteps" aria-label="Pasos">
+        <li>Tu empresa</li>
+        <li>Cuestionario</li>
+        <li>Diagnóstico y agenda</li>
+      </ol>
       <ul class="contact-direct label" id="ctaMails" aria-label="Correos de contacto"></ul>
     </div>
-    <form class="contact-form reveal" id="ctaForm">
-      <div class="form-row">
-        <div>
-          <label for="ctaNombre">Nombre</label>
-          <input id="ctaNombre" name="nombre" type="text" autocomplete="name" required />
+    <form class="contact-form reveal" id="ctaForm" novalidate>
+      <div class="diag-step">
+        <h3>1 · Tu empresa</h3>
+        <div class="form-row">
+          <div>
+            <label for="ctaNombre">Nombre</label>
+            <input id="ctaNombre" name="nombre" type="text" autocomplete="name" required />
+          </div>
+          <div>
+            <label for="ctaEmail">Correo</label>
+            <input id="ctaEmail" name="email" type="email" autocomplete="email" required />
+          </div>
         </div>
-        <div>
-          <label for="ctaOrg">Empresa u organismo</label>
-          <input id="ctaOrg" name="organizacion" type="text" autocomplete="organization" />
+        <div class="form-row">
+          <div>
+            <label for="ctaOrg">Empresa u organismo</label>
+            <input id="ctaOrg" name="organizacion" type="text" autocomplete="organization" required />
+          </div>
+          <div>
+            <label for="ctaCargo">Cargo <span class="opt">(opcional)</span></label>
+            <input id="ctaCargo" name="cargo" type="text" autocomplete="organization-title" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label for="ctaModelo">Actividad</label>
+            <select id="ctaModelo" name="actividad"></select>
+          </div>
+          <div>
+            <label for="ctaTamano">Tamaño</label>
+            <select id="ctaTamano" name="tamano"></select>
+          </div>
+        </div>
+        <label for="ctaSistemas">Sistemas que usan hoy <span class="opt">(opcional)</span></label>
+        <input id="ctaSistemas" name="sistemas" type="text" placeholder="Ej.: un ERP, Excel, sistema contable, WhatsApp" />
+        <label for="ctaMsg">¿Qué te gustaría resolver? <span class="opt">(opcional)</span></label>
+        <textarea id="ctaMsg" name="mensaje" rows="3" placeholder="Ej.: la caja la armamos en Excel cada semana y nunca coincide con el banco"></textarea>
+        <button class="btn btn-primary" type="submit">Seguir al cuestionario <span class="arrow" aria-hidden="true">→</span></button>
+      </div>
+      <div class="diag-step" hidden>
+        <h3>2 · Cuestionario rápido</h3>
+        <p class="form-note">Elegí la opción que más se parezca a cómo trabajan hoy. No hay respuestas correctas.</p>
+        <div id="diagPreguntas"></div>
+        <div class="diag-nav">
+          <button class="btn btn-ghost" type="button" data-step="0">← Volver</button>
+          <button class="btn btn-primary" type="submit">Ver mi diagnóstico <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </div>
-      <label for="ctaSector">Sector</label>
-      <select id="ctaSector" name="sector">
-        <option>Industria</option>
-        <option>Gobierno · ministerio o secretaría</option>
-        <option>Gobierno · municipio</option>
-        <option>Otro</option>
-      </select>
-      <label for="ctaMsg">Contanos brevemente</label>
-      <textarea id="ctaMsg" name="mensaje" rows="4" required placeholder="Ej.: la caja la armamos en Excel cada semana y nunca coincide con el banco"></textarea>
-      <button class="btn btn-primary" type="submit">Escribinos <span class="arrow" aria-hidden="true">→</span></button>
-      <p class="label-sm form-note">Se abre tu programa de correo con el mensaje listo para enviar.</p>
+      <div class="diag-step" hidden>
+        <h3>3 · Tu diagnóstico inicial</h3>
+        <div id="diagResultado"></div>
+        <p class="form-note" id="diagAgendaNota"></p>
+        <div class="diag-nav">
+          <button class="btn btn-primary" type="submit">Enviar diagnóstico <span class="arrow" aria-hidden="true">→</span></button>
+          <a class="btn btn-secondary" id="diagAgenda" href="#" target="_blank" rel="noopener noreferrer" hidden>Elegir horario ↗</a>
+        </div>
+        <button class="link-btn" type="button" data-step="1">← Cambiar respuestas</button>
+        <p class="label-sm form-note">Se abre tu programa de correo con las respuestas listas para enviar. Es una lectura orientativa, no un informe.</p>
+      </div>
     </form>
   </div>
 </section>

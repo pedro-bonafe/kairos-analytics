@@ -57,7 +57,7 @@ const SERVICIOS = [
     t: "Consultoría en Costos, Rentabilidad y Finanzas",
     frase: "Entendé y decidí con tus números reales, no con una planilla desactualizada.",
     problema: "Sabés cuánto vendés, pero no siempre la rentabilidad de tus productos o servicios, si tus precios cubren los costos o cuánta plata vas a tener el mes que viene. Y muchas veces esos números viven en una planilla que solo entiende quien la armó.",
-    solucion: "Ordenamos tu estructura de costos, analizamos y medimos cuánto aporta cada unidad de negocio. Armamos tu estado de resultado y cash flow proyectado con tableros, y lo volcamos a una herramienta simple, que tu equipo puede usar de forma autónoma y que se actualiza con tus datos en tiempo real.",
+    solucion: "Ordenamos tu estructura de costos, analizamos y medimos cuánto aporta cada unidad de negocio. Armamos tu estado de resultados y tu flujo de fondos (cash flow) proyectado con tableros, y lo volcamos a una herramienta simple, que tu equipo puede usar de forma autónoma y que se actualiza sola con tus datos.",
     mejora: "Sabés qué productos te convienen, cuál es el punto de equilibrio de tu empresa y cuándo puede faltar caja, con tiempo para decidir con previsibilidad.",
     items: [
       ["Esquemas de costeo", "Por producto, por línea y por centro de costos."],
@@ -72,7 +72,7 @@ const SERVICIOS = [
     frase: "Sistemas adaptados a las necesidades de tu empresa.",
     problema: "Tu PyME creció y los sistemas estándar no resuelven tus problemas. Lo que distingue a tu empresa queda afuera: esa parte de la operación termina en muchas planillas sueltas, en correos y en la memoria de quien la lleva. Cuando el sistema no se adapta, es tu equipo el que tiene que cambiar su forma de trabajar.",
     solucion: "Relevamos tu proceso real y construimos un sistema hecho para tu forma de trabajar, que se adapta y convive con lo que ya usás. Es un software a medida porque parte de cómo opera tu empresa, y no de un producto enlatado. Se entrega por módulos, cada uno validado con tu equipo de trabajo.",
-    mejora: "Tu operación ya no depende de las planillas: cada pedido, lote o contrato queda registrado con su historial, y tu stock siempre atualizado. Los informes y tableros que necesitas viven en el mismo sistema.",
+    mejora: "Tu operación ya no depende de las planillas: cada pedido, lote o contrato queda registrado con su historial, y tu stock siempre actualizado. Los informes y tableros que necesitás viven en el mismo sistema.",
     items: [
       ["Gestión", "Planta y proceso productivo, stock, pedidos, contratos, clientes, embarques y ventas."],
       ["Reportería", "Generación de informes y documentos."],
@@ -83,17 +83,27 @@ const SERVICIOS = [
 ];
 
 /* --------------------------------------------------------------------------
+   Ámbitos: primer nivel de "Sectores y casos". Cada pestaña de VERTICALES
+   declara a qué ámbito pertenece.
+   -------------------------------------------------------------------------- */
+const AMBITOS = [
+  { id: "privado", nombre: "Privado", bajada: "Empresas y pymes" },
+  { id: "publico", nombre: "Público", bajada: "Gobierno provincial y municipal" },
+];
+
+/* --------------------------------------------------------------------------
    Sectores: cómo suele estar cada uno y qué hacemos ahí en cada eje.
-   `casos` es el id de la pestaña de VERTICALES; `grafico` elige el elemento
-   gráfico ("bars" o "map") y `graficoNota` su leyenda.
+   Cada pestaña de VERTICALES lo referencia con `sector` (dos pestañas pueden
+   compartir el mismo). `grafico` elige el elemento gráfico ("bars" o "map")
+   y `graficoNota` su leyenda.
    -------------------------------------------------------------------------- */
 const SECTORES = [
   {
-    id: "industria", nombre: "Industrias", casos: "industrias", grafico: "bars",
+    id: "industria", nombre: "Industrias", grafico: "bars",
     graficoEje: ["S1", "alerta en S9", "S13"],
     graficoNota: "flujo de fondos proyectado · datos de ejemplo",
     frase: "Tus costos, tu caja y tu operación, en un solo lugar y al día.",
-    d: "Empresas productivas y exportadoras: fábricas, agroindustria y alimentos. Tienen un ERP que registra bien la operación, pero las respuestas de gestión se siguen armando a mano.",
+    d: "Empresas productivas y exportadoras: metalúrgicas, fábricas de maquinaria, alimentos, agroindustria y producción apícola. Tienen un ERP que registra bien la operación, pero las respuestas de gestión se siguen armando a mano.",
     rasgos: [
       ["El ERP registra, pero no explica", "Saber cuánto deja cada producto o cuánto hay que vender para cubrir los costos exige exportar y armar planillas."],
       ["Costos y caja dependen de una persona", "El modelo vive en un archivo que solo entiende quien lo hizo."],
@@ -107,7 +117,7 @@ const SECTORES = [
     ],
   },
   {
-    id: "gobierno", nombre: "Gobierno", casos: "gobierno", grafico: "map",
+    id: "gobierno", nombre: "Gobierno", grafico: "map",
     graficoEje: ["menos gestiones", "más gestiones"],
     graficoNota: "gestiones por zona del territorio · datos de ejemplo",
     frase: "La gestión a la vista, sin pedir informes.",
@@ -122,6 +132,61 @@ const SECTORES = [
       ["integracion", "Sincronizamos las planillas que un área todavía no puede dejar, armamos tableros territoriales y sumamos agentes que responden consultas en lenguaje natural sobre los datos del organismo."],
       ["finanzas", "Costo por programa y por área, y seguimiento de lo ejecutado contra lo previsto, con el mismo método que aplicamos en empresas."],
       ["software", "Plataforma institucional por áreas, con roles, historial y auditoría de cada cambio. Reclamos y atención al vecino con número de seguimiento. Se implementa por partes, con herramientas abiertas."],
+    ],
+  },
+  // Sectores sin caso publicado todavía: se muestra el contexto y los ejes.
+  {
+    id: "comercio", nombre: "Comercios", grafico: "bars",
+    graficoEje: ["S1", "alerta en S9", "S13"],
+    graficoNota: "flujo de fondos proyectado · datos de ejemplo",
+    frase: "Qué vendés, qué te deja y qué reponer, sin esperar al cierre.",
+    d: "Mayoristas, minoristas, distribuidoras y cadenas con varias sucursales. Venden todos los días, pero el margen real y el estado del stock se conocen tarde.",
+    rasgos: [
+      ["El sistema de ventas no muestra el margen", "Se sabe cuánto se facturó, no cuánto dejó cada producto o cada sucursal después de descuentos y costos."],
+      ["Stock que no coincide con la realidad", "Faltantes de lo que más se vende y mercadería inmovilizada, porque la reposición se decide a ojo."],
+      ["Precios que se actualizan a mano", "Cada lista nueva de un proveedor obliga a recalcular precios en una planilla."],
+      ["Pagos y cobranzas que no se miran juntos", "La caja se aprieta entre los plazos de proveedores y los de clientes."],
+    ],
+    servicios: [
+      ["integracion", "Unimos el sistema de ventas, el stock, los bancos y las listas de proveedores, y armamos tableros por sucursal, rubro y vendedor."],
+      ["finanzas", "Margen por producto y por sucursal, precios que cubren los costos y flujo de fondos que cruza pagos a proveedores con cobranzas."],
+      ["software", "Gestión de stock, pedidos y reposición a medida, con alertas de faltantes y listas de precios que se actualizan solas."],
+    ],
+  },
+  {
+    id: "logistica", nombre: "Logística", grafico: "map",
+    graficoEje: ["menos entregas", "más entregas"],
+    graficoNota: "entregas por zona · datos de ejemplo",
+    frase: "Cada viaje, cada entrega y cada costo, a la vista.",
+    d: "Transportistas, operadores logísticos y depósitos. Mueven mucho volumen con márgenes finos, y el costo real de cada viaje o de cada cliente no suele estar claro.",
+    rasgos: [
+      ["No se sabe cuánto cuesta cada viaje", "Combustible, peajes, choferes y mantenimiento se pagan, pero no se asignan a cada viaje ni a cada cliente."],
+      ["La operación vive en mensajes y planillas", "Hojas de ruta, remitos y novedades se pasan a mano."],
+      ["Tarifas que van detrás de los costos", "Los costos suben y la tarifa se revisa tarde."],
+      ["Clientes que preguntan dónde está su carga", "Cada consulta es un llamado o un mensaje que alguien tiene que responder."],
+    ],
+    servicios: [
+      ["integracion", "Unimos rastreo, facturación, combustible y planillas de choferes en una base común, y automatizamos la carga de remitos y comprobantes."],
+      ["finanzas", "Costo por viaje, por unidad y por cliente, rentabilidad de cada contrato y tarifas que cubren los costos."],
+      ["software", "Gestión de viajes, flota, depósito y entregas, con seguimiento para el cliente y modelos que proponen la mejor asignación."],
+    ],
+  },
+  {
+    id: "construccion", nombre: "Construcción", grafico: "bars",
+    graficoEje: ["S1", "alerta en S9", "S13"],
+    graficoNota: "flujo de fondos consolidado de obras · datos de ejemplo",
+    frase: "Cada obra con su costo, su avance y su caja.",
+    d: "Constructoras y desarrollistas. Cada obra es un proyecto con su presupuesto, sus certificaciones y sus pagos, y cuesta ver a tiempo si se está desviando.",
+    rasgos: [
+      ["El presupuesto y lo real no se cruzan", "El desvío de una obra se descubre al final, cuando ya no se puede corregir."],
+      ["Certificaciones, anticipos y pagos en planillas distintas", "Saber cuánta plata necesita cada obra el mes que viene es un trabajo aparte."],
+      ["Costos que cambian durante la obra", "Materiales y mano de obra se actualizan, y el presupuesto queda viejo."],
+      ["Información repartida entre la oficina y la obra", "Partes diarios, compras y avances llegan por fotos y mensajes."],
+    ],
+    servicios: [
+      ["integracion", "Unimos compras, contabilidad, bancos y partes de obra en una base común, con tableros por obra."],
+      ["finanzas", "Presupuesto contra real por obra y por rubro, rentabilidad de cada proyecto y flujo de fondos consolidado de todas las obras."],
+      ["software", "Gestión de obras, compras, certificaciones y avance físico, con carga desde la obra en el celular."],
     ],
   },
 ];
@@ -144,15 +209,17 @@ const DIFERENCIALES = [
 ];
 
 /* --------------------------------------------------------------------------
-   Casos por vertical. `demo` referencia una función de demos.js,
+   Casos por subsector (pestañas de segundo nivel). `ambito` es el id de
+   AMBITOS y `sector` el de SECTORES. `grupos` puede quedar vacío cuando
+   todavía no hay un caso publicado. `demo` referencia una función de demos.js,
    `servicios` los ids de SERVICIOS que intervienen y `arq` las capas de
    la arquitectura (`arqTitulo` cambia el rótulo cuando todavía es un diseño).
    -------------------------------------------------------------------------- */
 const VERTICALES = [
   {
-    id: "industria",
-    nombre: "Industria",
-    bajada: "Producción y exportación",
+    id: "industria", ambito: "privado", sector: "industria",
+    nombre: "Industrias",
+    bajada: "Metalúrgicas, agroindustria y exportación",
     intro: "Para empresas productivas cuyo ERP registra bien la operación pero no responde las preguntas de decisión, y para exportadores que comprometen producto por calidad y contrato.",
     grupos: [
       {
@@ -234,10 +301,13 @@ const VERTICALES = [
       },
     ],
   },
+  { id: "comercio", ambito: "privado", sector: "comercio", nombre: "Comercios", bajada: "Mayoristas, minoristas y distribuidoras", grupos: [] },
+  { id: "logistica", ambito: "privado", sector: "logistica", nombre: "Logística", bajada: "Transporte y depósitos", grupos: [] },
+  { id: "construccion", ambito: "privado", sector: "construccion", nombre: "Construcción", bajada: "Constructoras y desarrollistas", grupos: [] },
   {
-    id: "gobierno",
-    nombre: "Gobierno",
-    bajada: "Ministerios y municipios",
+    id: "ministerios", ambito: "publico", sector: "gobierno",
+    nombre: "Ministerios",
+    bajada: "Ministerios y secretarías",
     intro: "Herramientas con las que un organismo registra su trabajo, lo ve consolidado y lo consulta en lenguaje natural, sin obligar a las áreas a cambiar todo de un día para otro.",
     grupos: [
       {
@@ -307,6 +377,14 @@ const VERTICALES = [
           },
         ],
       },
+    ],
+  },
+  {
+    id: "municipios", ambito: "publico", sector: "gobierno",
+    nombre: "Municipios",
+    bajada: "Atención al vecino",
+    intro: "Del reporte del vecino a la cuadrilla, y de ahí a la consulta en lenguaje natural, en tres escalones que se suman sin perder datos.",
+    grupos: [
       {
         nombre: "Municipios",
         nota: "Atención al vecino en tres escalones",
@@ -405,3 +483,52 @@ const VERTICALES = [
     ],
   },
 ];
+
+/* --------------------------------------------------------------------------
+   Quiénes confían en nosotros. La sección se muestra sola cuando hay al menos
+   un elemento. Solo clientes reales que autorizaron aparecer, con su cita
+   textual: { org, logo: "files/logo-x.svg" (opcional), cita, autor, cargo }.
+   -------------------------------------------------------------------------- */
+const TESTIMONIOS = [];
+
+/* --------------------------------------------------------------------------
+   Agenda: enlace de reserva (Google Calendar "programación de citas",
+   Calendly, Cal.com…). Vacío = el último paso ofrece proponer horario por
+   correo en lugar del calendario.
+   -------------------------------------------------------------------------- */
+const CALENDAR_URL = "";
+
+/* --------------------------------------------------------------------------
+   Diagnóstico inicial: cuestionario rápido antes de la reunión.
+   Cada pregunta suma a un eje (id de SERVICIOS) y cada opción vale de 0 a 3.
+   El resultado es el porcentaje por eje; `niveles` traduce ese porcentaje.
+   -------------------------------------------------------------------------- */
+const DIAGNOSTICO = {
+  tamanos: ["1 a 10 personas", "11 a 50 personas", "51 a 200 personas", "Más de 200 personas"],
+  modelos: ["Producción o industria", "Comercio o distribución", "Servicios", "Logística o transporte", "Construcción", "Organismo público", "Otro"],
+  preguntas: [
+    { eje: "finanzas", q: "¿Cómo calculan el costo de sus productos o servicios?", o: [
+      "No lo calculamos", "Con una estimación general", "En una planilla que se actualiza cada tanto", "Con un costeo por producto, actualizado"] },
+    { eje: "finanzas", q: "¿Saben cuánta plata van a tener en los próximos dos o tres meses?", o: [
+      "No", "Tenemos una idea aproximada", "Hay una proyección en planilla", "Sí, con un flujo de fondos que se revisa cada semana"] },
+    { eje: "finanzas", q: "¿Con qué frecuencia miran el resultado y la rentabilidad?", o: [
+      "Al cierre del ejercicio, con el contador", "Cada tanto, cuando hace falta", "Todos los meses", "Todas las semanas o en un tablero"] },
+    { eje: "integracion", q: "¿Dónde están hoy los datos de la empresa?", o: [
+      "En papel y planillas sueltas", "En planillas y algún sistema", "En un sistema principal, con planillas al costado", "En sistemas conectados entre sí"] },
+    { eje: "integracion", q: "¿Cuánto tardan en tener un número consolidado (ventas, stock, caja)?", o: [
+      "Días, o no se puede", "Un día de trabajo", "Unas horas", "Está en un tablero al día"] },
+    { eje: "integracion", q: "¿Cuánto trabajo manual hay de copiar, pegar o transcribir datos?", o: [
+      "Mucho, todos los días", "Bastante", "Algo", "Casi nada"] },
+    { eje: "integracion", q: "¿Usan automatizaciones o IA en algún proceso?", o: [
+      "No", "Probamos herramientas sueltas", "Algunas automatizaciones", "Sí, integradas en procesos y con controles"] },
+    { eje: "software", q: "¿El sistema que usan se adapta a cómo trabajan?", o: [
+      "No tenemos sistema", "Tenemos uno, pero mucho queda afuera", "Bastante, con planillas al costado", "Sí, cubre la operación"] },
+    { eje: "software", q: "Si una persona clave se va, ¿qué pasa con su información?", o: [
+      "Se pierde", "Se recupera con mucho esfuerzo", "Queda documentada en parte", "Queda en el sistema, con su historial"] },
+  ],
+  niveles: [
+    [34, "Inicial", "Hay mucho valor por capturar con pasos cortos."],
+    [67, "En desarrollo", "La base existe; falta conectarla y que se actualice sola."],
+    [101, "Avanzado", "El foco está en afinar y automatizar lo que ya funciona."],
+  ],
+};

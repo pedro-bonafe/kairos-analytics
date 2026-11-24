@@ -290,6 +290,54 @@ details.more p { margin: 12px 0 0; }
 .contact-form .btn { margin-top: 16px; }
 .form-note { margin: 4px 0 0; }
 
+/* Diagnóstico inicial en tres pasos */
+.diag-step { display: grid; gap: 8px; }
+.diag-step[hidden], .diag-step [hidden], #confian[hidden] { display: none; }
+.diag-step > .link-btn { justify-self: start; margin-top: 4px; }
+.diag-step h3 { margin: 0 0 4px; font-size: 22px; letter-spacing: -0.02em; outline: none; }
+.contact-form .opt { color: var(--ink-3); }
+.diag-steps { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.diag-steps li { padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color: var(--ink-3); transition: color .2s, border-color .2s; }
+.diag-steps li.on { color: var(--ink); border-color: var(--ink); }
+.diag-q { border: 0; border-top: 1px solid var(--line); margin: 0; padding: 18px 0 6px; min-width: 0; }
+.diag-q legend { padding: 0; margin-bottom: 12px; font-weight: 700; display: grid; gap: 4px; }
+.diag-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.contact-form .diag-opts label { position: relative; margin: 0;font: 15px/1.35 var(--font); color: var(--ink); cursor: pointer; }
+.diag-opts label span { display: block; height: 100%; padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: var(--radius); transition: border-color .2s, background-color .2s; }
+.diag-opts label:hover span { border-color: var(--ink); }
+.contact-form .diag-opts input { position: absolute; opacity: 0; width: 1px; height: 1px; min-height: 0; padding: 0; }
+.diag-opts input:checked + span { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.diag-opts input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 2px; }
+.diag-nav { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.diag-ejes { display: grid; gap: 18px; margin-top: 8px; }
+.diag-eje { display: grid; gap: 6px; }
+.diag-eje > span { color: var(--ink-2); font-size: 15px; }
+.diag-eje-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.meter { height: 10px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--gradient-x); border-radius: inherit; }
+.diag-foco { margin-top: 24px; padding: 18px 20px; border: 1px solid var(--line-strong); border-radius: var(--radius); display: grid; gap: 6px; }
+.diag-foco p { margin: 0; color: var(--ink-2); }
+
+/* Sectores: segundo nivel de pestañas y sectores sin caso publicado */
+.stabs { display: flex; gap: 8px; flex-wrap: wrap; margin: -28px 0 40px; }
+.stab { padding: 8px 16px; background: none; border: 1px solid var(--line-strong); border-radius: var(--radius); cursor: pointer; font-weight: 700; color: var(--ink-2); transition: border-color .2s, color .2s, background-color .2s; }
+.stab:hover { color: var(--ink); border-color: var(--ink); }
+.stab[aria-selected="true"] { background: var(--surface-2); color: var(--ink); border-color: var(--ink); }
+.sector-bajada { margin: 0 0 20px; }
+.sin-caso { border: 1px dashed var(--line-strong); border-radius: var(--radius); padding: 24px; display: grid; gap: 16px; }
+.sin-caso p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+.sin-caso .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Quiénes confían en nosotros */
+.testimonios { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.testimonio { margin: 0; border-top: 1px solid var(--line-strong); padding-top: 20px; display: grid; gap: 14px; align-content: start; }
+.testimonio img { height: 40px; width: auto; max-width: 160px; object-fit: contain; }
+.testimonio-org { font-weight: 800; font-size: 20px; letter-spacing: -0.02em; }
+.testimonio blockquote { margin: 0; font-size: 17px; }
+.testimonio figcaption { display: grid; gap: 2px; font-size: 14px; }
+.testimonio figcaption span { color: var(--ink-2); }
+@media (max-width: 640px) { .diag-opts { grid-template-columns: 1fr; } .stabs { margin-top: -24px; } }
+
 footer { padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; }
 
