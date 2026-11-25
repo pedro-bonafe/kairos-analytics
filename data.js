@@ -30,7 +30,7 @@ const PRUEBAS = [
   [7, "", "demos interactivas para probar en esta página"],
 ];
 
-// Nombre con el que la página se refiere a conectar, medir y gestionar.
+// Nombre con el que la página se refiere a conectar, medir y construir.
 const EJES = "los tres ejes";
 
 /* --------------------------------------------------------------------------
@@ -67,7 +67,7 @@ const SERVICIOS = [
     ],
   },
   {
-    id: "software", verbo: "gestionar",
+    id: "software", verbo: "construir",
     t: "Software de Gestión a Medida",
     frase: "Sistemas adaptados a las necesidades de tu empresa.",
     problema: "Tu PyME creció y los sistemas estándar no resuelven tus problemas. Lo que distingue a tu empresa queda afuera: esa parte de la operación termina en muchas planillas sueltas, en correos y en la memoria de quien la lleva. Cuando el sistema no se adapta, es tu equipo el que tiene que cambiar su forma de trabajar.",

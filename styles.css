@@ -117,7 +117,10 @@ section { padding-block: var(--section-y); border-top: 1px solid var(--line); }
 .mosaic .cell-on { transform-box: fill-box; transform-origin: center; opacity: 0; transform: scale(.4); transition: opacity .5s var(--ease) var(--d), transform .6s var(--ease) var(--d); }
 #mosaic.built .cell-on { opacity: 1; transform: none; }
 #mosaic.built .cell-on.blink { opacity: .35; transition-delay: 0s; transition-duration: .45s; }
-.caption { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; }
+.mosaic .axis path { fill: none; stroke: var(--ink-3); stroke-width: 2; stroke-linecap: round; }
+.mosaic .axis polygon { fill: var(--ink-3); }
+.caption { display: flex; justify-content: space-between; gap: 16px; margin-top: 10px; }
+.caption span:last-child::after { content: " →"; }
 
 /* Franja de datos */
 .proof { list-style: none; margin: 64px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }

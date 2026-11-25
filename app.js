@@ -89,9 +89,16 @@
         ? `<rect class="cell-on" style="--d:${(c * 70 + r * 18)}ms" x="${c * C + GAP}" y="${r * C + GAP}" width="${C - GAP}" height="${C - GAP}" fill="url(#gMosaic)"/>`
         : `<rect class="cell-off" x="${c * C + GAP}" y="${r * C + GAP}" width="${C - GAP}" height="${C - GAP}"/>`;
     }
-    el.innerHTML = `<svg class="mosaic" viewBox="0 0 ${COLS * C} ${ROWS * C}" role="img" aria-label="Celdas de colores sueltas a la izquierda que se agrupan en un bloque ordenado a la derecha">
+    // Ejes cartesianos: la flecha horizontal marca el sentido "de disperso a ordenado"
+    const W = COLS * C, H = ROWS * C, AX = -14, AY = H + 14;
+    const ejes = `<g class="axis" aria-hidden="true">
+        <path d="M${AX} ${AY}H${W + 6}M${AX} ${AY}V${-4}"/>
+        <polygon points="${W + 16},${AY} ${W + 4},${AY - 6} ${W + 4},${AY + 6}"/>
+        <polygon points="${AX},${-14} ${AX - 6},${-2} ${AX + 6},${-2}"/>
+      </g>`;
+    el.innerHTML = `<svg class="mosaic" viewBox="-24 -16 ${W + 44} ${H + 38}" role="img" aria-label="Celdas de colores sueltas a la izquierda que se agrupan en un bloque ordenado a la derecha, sobre un eje que avanza de izquierda a derecha">
       <defs><linearGradient id="gMosaic" gradientUnits="userSpaceOnUse" x1="80.5" y1="536.4" x2="495.5" y2="-56.4">${STOPS}</linearGradient></defs>
-      ${cells}</svg>`;
+      ${ejes}${cells}</svg>`;
     requestAnimationFrame(() => el.classList.add("built"));
     if (reduced) return;
     const live = $$(".cell-on", el);
