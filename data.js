@@ -517,7 +517,7 @@ const CLIENTES = [
   { nombre: "Ingeniería Muñoz S.A.", logo: "files/clientes/ingenieria-munoz.svg", ar: 426.2 / 112.7 },
   { nombre: "Balcami", logo: "files/clientes/balcami.svg", ar: 180.2 / 44.3 },
   { nombre: "Impro SRL", logo: "files/clientes/impro.svg", ar: 368.1 / 59.7 },
-  { nombre: "AV", logo: "files/clientes/av.svg", ar: 127.3 / 75.6 },
+  { nombre: "AV MERCH", logo: "files/clientes/av.svg", ar: 127.3 / 75.6 },
   { nombre: "Secretaría General de Gobierno · Gobierno de la Provincia de Córdoba", logo: "files/clientes/gobierno-cordoba.svg", ar: 240.2 / 121.5, escala: 1.5 },
 ];
 

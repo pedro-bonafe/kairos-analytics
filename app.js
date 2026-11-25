@@ -879,11 +879,12 @@
      Quiénes confían en nosotros: se muestra solo si hay testimonios cargados
      ------------------------------------------------------------------------ */
   // Logos de clientes: todos con la misma superficie, para que una marca
-  // cuadrada y un logotipo ancho pesen lo mismo. El color sale de la máscara.
+  // cuadrada y un logotipo ancho pesen lo mismo. El SVG es negro y el gris sale
+  // de la opacidad (en oscuro se invierte); así funciona también en file://.
   if (CLIENTES.length) {
     $("#clientesGrid").innerHTML = CLIENTES.map((c) => {
       const AREA = 4200 * (c.escala || 1), w = Math.min(136, Math.sqrt(AREA * c.ar)), h = w / c.ar;
-      return `<li><span class="cliente-logo" role="img" aria-label="${esc(c.nombre)}" style="--src:url('${esc(c.logo)}');width:${w.toFixed(0)}px;height:${h.toFixed(0)}px"></span></li>`;
+      return `<li><img class="cliente-logo" src="${esc(c.logo)}" alt="${esc(c.nombre)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}" loading="lazy" /></li>`;
     }).join("");
     $("#confian").hidden = false;
   }
