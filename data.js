@@ -511,7 +511,7 @@ const TESTIMONIOS = [];
    Calendly, Cal.com…). Vacío = el último paso ofrece proponer horario por
    correo en lugar del calendario.
    -------------------------------------------------------------------------- */
-const CALENDAR_URL = "";
+const CALENDAR_URL = "https://calendar.app.google/XDQgpZ7ZpRtS7pT2A";
 
 /* --------------------------------------------------------------------------
    Envío del diagnóstico sin salir de la página, con Web3Forms
@@ -519,7 +519,7 @@ const CALENDAR_URL = "";
    diagnósticos; es pública por diseño y puede ir en el código.
    Vacía = se abre el programa de correo del visitante (mailto:), como antes.
    -------------------------------------------------------------------------- */
-const WEB3FORMS_KEY = "";
+const WEB3FORMS_KEY = "257476e9-6356-42e6-816e-db884a00d47e";
 
 /* --------------------------------------------------------------------------
    Diagnóstico inicial: cuestionario rápido antes de la reunión.

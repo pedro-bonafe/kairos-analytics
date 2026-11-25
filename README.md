@@ -55,8 +55,7 @@ Enlace directo: `demo/#demo-<clave>`. El botón "Copiar enlace" del modal lo gen
 ## Pendiente
 
 - Dominio (revisar disponibilidad de dominio y marca en INPI). El logo actual (cubo 07) puede cambiar.
-- Contacto: crear la clave en web3forms.com con la casilla que recibe los diagnósticos y cargarla en `WEB3FORMS_KEY` (`data.js`). Web3Forms escribe a una sola casilla por clave: para que llegue a las dos de `CONTACT_EMAILS`, reenviar desde esa casilla o sumar la otra en el panel de Web3Forms.
+- Contacto: Web3Forms escribe a una sola casilla por clave (`WEB3FORMS_KEY`); para que el diagnóstico llegue a las dos de `CONTACT_EMAILS`, reenviar desde esa casilla o sumar la otra en el panel de Web3Forms.
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
 - Sección "Quiénes confían en nosotros": cargar en `TESTIMONIOS` solo clientes reales que autorizaron, con su cita textual.
-- Agenda: completar `CALENDAR_URL` (Google Calendar con programación de citas, Calendly o Cal.com).
 - Comercios, Logística y Construcción no tienen caso publicado; los textos de esos sectores son un borrador para revisar.
