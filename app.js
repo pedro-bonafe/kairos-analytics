@@ -882,7 +882,7 @@
   // cuadrada y un logotipo ancho pesen lo mismo. El color sale de la máscara.
   if (CLIENTES.length) {
     $("#clientesGrid").innerHTML = CLIENTES.map((c) => {
-      const AREA = 4200, w = Math.min(168, Math.sqrt(AREA * c.ar)), h = w / c.ar;
+      const AREA = 4200 * (c.escala || 1), w = Math.min(136, Math.sqrt(AREA * c.ar)), h = w / c.ar;
       return `<li><span class="cliente-logo" role="img" aria-label="${esc(c.nombre)}" style="--src:url('${esc(c.logo)}');width:${w.toFixed(0)}px;height:${h.toFixed(0)}px"></span></li>`;
     }).join("");
     $("#confian").hidden = false;
