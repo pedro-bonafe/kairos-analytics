@@ -161,50 +161,57 @@
       ${body}</svg>`;
   };
 
-  // Industrias: margen por línea de producto, con barras en forma de fábrica
-  // (techo de diente de sierra, ventanas y chimenea con humo).
-  function factories(el) {
-    const W = 408, H = 250, BASE = 236, FW = 52, GAP = 16, X0 = 8, MAX = 150;
-    const pct = [58, 74, 34, 92, 66, 82];
-    let body = `<path class="gfx-ground" d="M0 ${BASE + .5}H${W}"/>`;
-    pct.forEach((p, i) => {
-      const x = X0 + i * (FW + GAP), top = BASE - MAX * p / 100, half = FW / 2;
-      const roof = `${x},${top} ${x + half},${top - 14} ${x + half},${top} ${x + FW},${top - 14} ${x + FW},${top}`;
-      let win = "";
-      for (let y = top + 14; y < BASE - 18; y += 22) for (let k = 0; k < 3; k++) win += `<rect class="gfx-win" x="${x + 8 + k * 14}" y="${y}" width="8" height="10"/>`;
-      body += `<g class="grow${i === 2 ? " bar-alert" : ""}" style="--d:${i * 90}ms" fill="url(#gFab)">
-          <rect x="${x + FW - 14}" y="${top - 40}" width="8" height="40"/>
-          <polygon points="${roof}"/>
-          <rect x="${x}" y="${top}" width="${FW}" height="${BASE - top}"/>
-          ${win}
-        </g>
-        <circle class="smoke" style="--d:${1000 + i * 380}ms" cx="${x + FW - 10}" cy="${top - 48}" r="5"/>`;
+  const gfxT = (x, y, t, anchor = "middle") => `<text class="gfx-t" x="${x}" y="${y}" text-anchor="${anchor}">${t}</text>`;
+
+  // Industrias: programación semanal de la planta. Cada máquina con sus
+  // órdenes de trabajo; pintura no tiene huecos y es el cuello de botella.
+  function planta(el) {
+    const W = 408, H = 250, X0 = 74, DAY = 54, RH = 34, Y0 = 30;
+    const maqs = [
+      ["corte", [[0, 1.2], [1.5, 2.6], [3, 4.4]]],
+      ["torno", [[0.4, 1.8], [2.2, 3.1], [3.8, 5]]],
+      ["soldadura", [[1, 2.4], [2.6, 3.4], [4.2, 5.4]]],
+      ["pintura", [[0, 1.6], [1.6, 3.2], [3.2, 4.6], [4.6, 6]]],
+      ["embalaje", [[1.8, 2.5], [3.4, 4.1], [5, 5.8]]],
+    ];
+    let body = "";
+    ["lun", "mar", "mié", "jue", "vie", "sáb"].forEach((d, i) => (body += gfxT(X0 + i * DAY + DAY / 2, 16, d)));
+    maqs.forEach(([nom, ords], r) => {
+      const y = Y0 + r * (RH + 8);
+      body += gfxT(X0 - 10, y + RH / 2 + 4, nom, "end");
+      body += `<rect class="cell-off" x="${X0}" y="${y}" width="${DAY * 6}" height="${RH}" rx="3"/>`;
+      ords.forEach(([a, b], k) => {
+        body += `<rect class="grow-x${r === 3 ? " bar-alert" : ""}" style="--d:${r * 120 + k * 90}ms" x="${X0 + a * DAY + 1.5}" y="${y + 4}" width="${(b - a) * DAY - 3}" height="${RH - 8}" rx="2" fill="url(#gPlan)"/>`;
+      });
     });
-    gfx(el, "gFab", W, H, "Seis fábricas de distinta altura: el margen de cada línea de producto, con la tercera más baja en alerta", body,
-      `x1="0" y1="0" x2="${W}" y2="0"`);
+    const yFin = Y0 + 5 * (RH + 8);
+    body += `<path class="gfx-hoy" d="M${X0 + 2.3 * DAY} 22V${yFin - 4}"/>` + gfxT(X0 + 2.3 * DAY, yFin + 10, "hoy");
+    gfx(el, "gPlan", W, H, "Programación semanal de cinco máquinas con sus órdenes de trabajo; pintura está ocupada toda la semana y es el cuello de botella", body,
+      `x1="${X0}" y1="0" x2="${W}" y2="0"`);
   }
 
-  // Comercios: una vidriera con toldo y góndolas; los huecos son faltantes.
-  function shop(el) {
-    const W = 408, H = 262, SEG = 51;
+  // Comercios: ventas por día y hora. Cada celda crece con las ventas de esa
+  // franja (picos al mediodía y a la tarde, sábado fuerte, domingo corto).
+  function horas(el) {
+    const dias = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"], HS = 14, C = 26, X0 = 36, Y0 = 22, GAP = 3;
+    const W = X0 + HS * C, H = Y0 + dias.length * C + 4;
+    const pico = (h, c, s) => Math.exp(-((h - c) ** 2) / (2 * s * s));
     let body = "";
-    for (let i = 0; i < 8; i++) {
-      const x = i * SEG, f = i % 2 ? "var(--surface-2)" : "url(#gShop)";
-      body += `<rect class="pop" style="--d:${i * 50}ms" x="${x}" y="4" width="${SEG}" height="22" fill="${f}"/>
-        <path class="pop" style="--d:${i * 50}ms" d="M${x} 26a${SEG / 2} ${SEG / 2 - 8} 0 0 0 ${SEG} 0z" fill="${f}"/>`;
-    }
-    body += `<rect class="gfx-frame" x="14" y="58" width="${W - 28}" height="${H - 62}" rx="4"/>`;
-    const falta = [[3, 4], [8], [1, 6, 7]];
-    [110, 172, 234].forEach((y, r) => {
-      body += `<path class="gfx-shelf" d="M26 ${y + .5}H${W - 26}"/>`;
-      for (let k = 0; k < 11; k++) {
-        const x = 31 + k * 32, h = 30 + ((k * 7 + r * 5) % 4) * 4;
-        body += falta[r].includes(k)
-          ? `<rect class="gfx-falta" x="${x}" y="${y - 34}" width="26" height="34" rx="2"/>`
-          : `<rect class="grow" style="--d:${300 + r * 160 + k * 30}ms" x="${x}" y="${y - h}" width="26" height="${h}" rx="2" fill="url(#gShop)"/>`;
+    for (let h = 0; h < HS; h += 2) body += gfxT(X0 + h * C + C / 2, 12, `${8 + h}h`);
+    dias.forEach((d, r) => {
+      body += gfxT(X0 - 8, Y0 + r * C + C / 2 + 4, d, "end");
+      const peso = r === 5 ? 1.25 : r === 6 ? .55 : r === 0 ? .8 : 1;
+      for (let h = 0; h < HS; h++) {
+        const hora = 8 + h;
+        let v = peso * Math.max(.75 * pico(hora, 12.5, 1.3), pico(hora, 19, 1.6)) + .08;
+        if (r === 6 && hora > 14) v *= .3;
+        v = Math.min(1, v);
+        const side = Math.round((C - GAP) * (.2 + .8 * v)), off = (C - side) / 2;
+        body += `<rect class="cell-off" x="${X0 + h * C + GAP / 2}" y="${Y0 + r * C + GAP / 2}" width="${C - GAP}" height="${C - GAP}"/>`
+          + `<rect class="pop" style="--d:${Math.round((1 - v) * 800)}ms" x="${X0 + h * C + off}" y="${Y0 + r * C + off}" width="${side}" height="${side}" fill="url(#gHora)"/>`;
       }
     });
-    gfx(el, "gShop", W, H, "Una vidriera con toldo y tres góndolas con productos; los huecos marcados son faltantes de stock", body);
+    gfx(el, "gHora", W, H, "Mapa de ventas por día de la semana y hora: los picos son al mediodía y entre las 18 y las 20, y el sábado es el día más fuerte", body);
   }
 
   // Logística: un mapa de celdas con rutas que salen del depósito y se trazan
@@ -272,7 +279,7 @@
     nodes += `<rect class="pop" style="--d:0ms" x="${CX - 18}" y="${CY - 18}" width="36" height="36" rx="4" fill="var(--ink)"/>`;
     gfx(el, "gNet", W, H, "Red con la conducción en el centro conectada a seis áreas, cada una con sus expedientes", lines + nodes);
   }
-  const GRAFICOS = { bars, map, factories, shop, routes, blocks, network };
+  const GRAFICOS = { bars, map, planta, horas, routes, blocks, network };
   mosaic($("#mosaic"));
 
   /* ------------------------------------------------------------------------

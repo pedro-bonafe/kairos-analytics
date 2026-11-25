@@ -99,9 +99,9 @@ const AMBITOS = [
    -------------------------------------------------------------------------- */
 const SECTORES = [
   {
-    id: "industria", nombre: "Industrias", grafico: "factories",
-    graficoEje: ["línea 1", "margen bajo en la línea 3", "línea 6"],
-    graficoNota: "margen de contribución por línea de producto · datos de ejemplo",
+    id: "industria", nombre: "Industrias", grafico: "planta",
+    graficoEje: ["órdenes de trabajo por máquina", "cuello de botella: pintura"],
+    graficoNota: "ocupación semanal de la planta · datos de ejemplo",
     frase: "Tus costos, tu caja y tu operación, en un solo lugar y al día.",
     d: "Empresas productivas y exportadoras: metalúrgicas, fábricas de maquinaria, alimentos, agroindustria y producción apícola. Tienen un ERP que registra bien la operación, pero las respuestas de gestión se siguen armando a mano.",
     rasgos: [
@@ -136,9 +136,9 @@ const SECTORES = [
   },
   // Sectores sin caso publicado todavía: se muestra el contexto y los ejes.
   {
-    id: "comercio", nombre: "Comercios", grafico: "shop",
-    graficoEje: ["con stock", "huecos: faltantes a reponer"],
-    graficoNota: "stock por góndola · datos de ejemplo",
+    id: "comercio", nombre: "Comercios", grafico: "horas",
+    graficoEje: ["menos ventas", "más ventas"],
+    graficoNota: "ventas por día y franja horaria · datos de ejemplo",
     frase: "Qué vendés, qué te deja y qué reponer, sin esperar al cierre.",
     d: "Mayoristas, minoristas, distribuidoras y cadenas con varias sucursales. Venden todos los días, pero el margen real y el estado del stock se conocen tarde.",
     rasgos: [
