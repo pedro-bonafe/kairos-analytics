@@ -437,23 +437,130 @@
   mails.addEventListener("click", (e) => { const b = e.target.closest("[data-copy]"); if (b) copy(b.dataset.copy, "Correo copiado"); });
 
   /* ------------------------------------------------------------------------
-     Diagnóstico inicial: 1 · datos de la empresa, 2 · cuestionario,
-     3 · resultado por eje, envío por correo y agenda.
+     Diagnóstico inicial: 1 · datos de la empresa, 2 · cuestionario
+     (Auditoría Express + datos y sistemas), 3 · resultado, calculadora de
+     rentabilidad, envío por correo y agenda.
      ------------------------------------------------------------------------ */
   const form = $("#ctaForm");
-  const opts = (arr) => arr.map((t) => `<option>${esc(t)}</option>`).join("");
-  $("#ctaModelo").innerHTML = opts(DIAGNOSTICO.modelos);
-  $("#ctaTamano").innerHTML = opts(DIAGNOSTICO.tamanos);
-  $("#diagPreguntas").innerHTML = DIAGNOSTICO.preguntas.map((p, i) => `
-    <fieldset class="diag-q">
-      <legend><span class="label-sm">${String(i + 1).padStart(2, "0")} · ${esc(verboServicio[p.eje])}</span>${esc(p.q)}</legend>
-      <div class="diag-opts">${p.o.map((t, j) => `
-        <label><input type="radio" name="q${i}" value="${j}" ${j === 0 ? "required" : ""} /><span>${esc(t)}</span></label>`).join("")}
-      </div>
-    </fieldset>`).join("");
-
   const steps = $$(".diag-step", form), stepDots = $$("#diagSteps li");
   let step = 0;
+  const D = DIAGNOSTICO;
+  const PREG = D.bloques.flatMap((b) => b.qs.map((q) => ({ ...q, b })));
+  const VAL = Object.fromEntries(D.escala.map(([k, , v]) => [k, v]));
+  const LBL = Object.fromEntries(D.escala.map(([k, l]) => [k, l]));
+  const pesos = (n) => "$ " + Math.round(n).toLocaleString("es-AR");
+  const pct = (x) => Math.round(x * 100) + "%";
+  const num = (n, d = 1) => Number(n).toLocaleString("es-AR", { maximumFractionDigits: d });
+  const opts = (arr) => arr.map((t) => `<option>${esc(t)}</option>`).join("");
+  $("#ctaModelo").innerHTML = opts(D.modelos);
+  $("#ctaTamano").innerHTML = opts(D.tamanos);
+
+  // Paso 2: bloques y preguntas Sí / Más o menos / No
+  let nq = 0;
+  $("#diagPreguntas").innerHTML = D.bloques.map((b) => `
+    <div class="diag-bloque">
+      <div class="diag-bloque-head"><b>${esc(b.nom)}</b><span>${esc(b.desc)}</span></div>
+      ${b.qs.map((q) => `
+      <fieldset class="diag-q" id="q-${q.id}" data-n="${++nq}" aria-describedby="err-${q.id}">
+        <legend><span class="label-sm">${String(nq).padStart(2, "0")}</span>${esc(q.t)}</legend>
+        <div class="diag-opts">${D.escala.map(([k, l]) => `
+          <label><input type="radio" name="${q.id}" value="${k}" required /><span>${esc(l)}</span></label>`).join("")}
+        </div>
+        ${q.extra ? `<div class="diag-extra" hidden>
+          <label for="x-${q.extra.k}">${esc(q.extra.lbl)} <span class="opt">(opcional, alimenta la calculadora)</span></label>
+          <input id="x-${q.extra.k}" data-extra="${q.extra.k}" type="number" inputmode="decimal" min="0" step="any" />
+        </div>` : ""}
+        <p class="field-error" id="err-${q.id}" hidden>Elegí una opción.</p>
+      </fieldset>`).join("")}
+    </div>`).join("");
+
+  /* --- Campos obligatorios: aviso en cada campo y resumen de lo que falta --- */
+  const MSG = {
+    ctaNombre: { valueMissing: "Completá tu nombre." },
+    ctaEmail: { valueMissing: "Completá tu correo.", typeMismatch: "Revisá el correo: tiene que ser del tipo nombre@empresa.com." },
+    ctaOrg: { valueMissing: "Completá el nombre de la empresa u organismo." },
+  };
+  const ROTULO = { ctaNombre: "nombre", ctaEmail: "correo", ctaOrg: "empresa u organismo" };
+  // Un aviso (oculto) por paso, junto a los botones
+  steps.slice(0, 2).forEach((s) => ($(".diag-nav", s) || $("[type=submit]", s)).insertAdjacentHTML("beforebegin", `<div class="form-alert" role="alert" hidden></div>`));
+
+  function errorCampo(el) {
+    let p = $(`#err-${el.id}`);
+    if (!p) {
+      el.insertAdjacentHTML("afterend", `<p class="field-error" id="err-${el.id}" hidden></p>`);
+      p = $(`#err-${el.id}`);
+      el.setAttribute("aria-describedby", p.id);
+    }
+    return p;
+  }
+  // Lista lo que falta en el paso n. Con `marcar` muestra el aviso de cada
+  // campo; sin él solo actualiza los que ya estaban marcados.
+  function faltantes(n, marcar) {
+    const out = [];
+    if (n === 0) {
+      $$("input[required]", steps[0]).forEach((el) => {
+        const v = el.validity, m = MSG[el.id] || {};
+        const msg = v.valueMissing ? m.valueMissing : v.typeMismatch ? m.typeMismatch : "";
+        if (msg) out.push({ el, txt: v.typeMismatch ? `${ROTULO[el.id]} (no es válido)` : ROTULO[el.id] });
+        if (marcar || el.hasAttribute("aria-invalid")) {
+          const p = errorCampo(el);
+          p.textContent = msg;
+          p.hidden = !msg;
+          el.toggleAttribute("aria-invalid", !!msg);
+        }
+      });
+    } else if (n === 1) {
+      PREG.forEach((q) => {
+        const fs = $(`#q-${q.id}`), ok = !!resp(q.id);
+        if (!ok) out.push({ el: fs, txt: fs.dataset.n });
+        if (marcar || fs.classList.contains("is-invalid")) {
+          fs.classList.toggle("is-invalid", !ok);
+          $(`#err-${q.id}`).hidden = ok;
+        }
+      });
+    }
+    return out;
+  }
+  const lista = (a) => (a.length > 1 ? a.slice(0, -1).join(", ") + " y " + a[a.length - 1] : a[0] || "");
+  function resumen(n, f) {
+    const box = $(".form-alert", steps[n]);
+    if (!box) return;
+    if (!f.length) { box.hidden = true; box.innerHTML = ""; return; }
+    const txt = n === 0
+      ? `Para seguir, falta completar: ${lista(f.map((x) => x.txt))}.`
+      : f.length === 1
+        ? `Para ver tu diagnóstico, falta responder la pregunta ${f[0].txt}.`
+        : `Para ver tu diagnóstico, faltan responder ${f.length} preguntas: ${lista(f.map((x) => x.txt))}.`;
+    box.innerHTML = `<span>${esc(txt)}</span> <button class="link-btn" type="button" data-ir>Ir a ${n === 0 ? "lo que falta" : "la primera"} →</button>`;
+    box.hidden = false;
+  }
+  function irA(el) {
+    el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+    (el.matches("fieldset") ? $("input", el) : el).focus({ preventScroll: true });
+  }
+  function pasoValido(n) {
+    const f = faltantes(n, true);
+    resumen(n, f);
+    if (f.length) irA(f[0].el);
+    return !f.length;
+  }
+  // Al corregir, los avisos se actualizan solos
+  const refrescarAvisos = () => {
+    const box = $(".form-alert", steps[step]);
+    if ((box && !box.hidden) || $("[aria-invalid], .is-invalid", steps[step])) resumen(step, faltantes(step, false));
+  };
+  form.addEventListener("input", (e) => {
+    if (e.target.matches("[data-extra]")) { $(`#calc-${e.target.dataset.extra}`).value = e.target.value; calcular(); }
+    refrescarAvisos();
+  });
+  form.addEventListener("change", (e) => {
+    const r = e.target;
+    if (r.type !== "radio") return;
+    const ex = $(".diag-extra", r.closest("fieldset"));
+    if (ex) ex.hidden = r.value !== "si";
+    refrescarAvisos();
+  });
+
   function goStep(n) {
     step = n;
     steps.forEach((s, i) => (s.hidden = i !== n));
@@ -464,39 +571,59 @@
     const top = form.getBoundingClientRect().top;
     if (top < 80) scrollTo({ top: scrollY + top - 96, behavior: reduced ? "auto" : "smooth" });
   }
-  // Valida solo los campos del paso visible
-  const pasoValido = (n) => $$("input, select, textarea", steps[n]).every((el) => el.checkValidity()) || (steps[n].querySelector(":invalid").reportValidity(), false);
 
-  function puntajes() {
-    const acc = {};
-    DIAGNOSTICO.preguntas.forEach((p, i) => {
-      const r = form.querySelector(`input[name="q${i}"]:checked`);
-      acc[p.eje] = acc[p.eje] || { suma: 0, max: 0 };
-      acc[p.eje].suma += r ? +r.value : 0;
-      acc[p.eje].max += 3;
-    });
-    return SERVICIOS.filter((s) => acc[s.id]).map((s) => {
-      const pct = Math.round(100 * acc[s.id].suma / acc[s.id].max);
-      const [, nivel, nota] = DIAGNOSTICO.niveles.find(([hasta]) => pct < hasta);
-      return { s, pct, nivel, nota };
-    });
+  /* --- Puntaje (reglas de la Auditoría Express) --- */
+  function resp(id) { const r = form.querySelector(`input[name="${id}"]:checked`); return r && r.value; }
+  function bloque(b) {
+    const r = b.qs.map((q) => resp(q.id)).filter(Boolean);
+    const pts = r.reduce((a, k) => a + VAL[k], 0), max = r.length * 2;
+    return { b, pts, max, pct: max ? pts / max : 0 };
   }
+  function evaluar() {
+    const bs = D.bloques.map(bloque);
+    const pts = bs.reduce((a, x) => a + x.pts, 0), max = bs.reduce((a, x) => a + x.max, 0);
+    const total = max ? pts / max : 0;
+    return {
+      bs, total,
+      cierre: D.cierre.find(([hasta]) => total < hasta)[1],
+      falta: PREG.filter((q) => resp(q.id) === "no").map((q) => q.c),
+      parcial: PREG.filter((q) => resp(q.id) === "mm").map((q) => q.c),
+      foco: bs.reduce((a, x) => (x.pct < a.pct ? x : a)),
+    };
+  }
+  const nivel = (p, alto) => (p >= alto ? "ok" : p >= 0.4 ? "warn" : "bad");
+
   function renderResultado() {
-    const res = puntajes();
-    const foco = res.reduce((a, b) => (b.pct < a.pct ? b : a));
+    const ev = evaluar(), sv = servicio[ev.foco.b.eje];
     $("#diagResultado").innerHTML = `
-      <div class="diag-ejes">${res.map((r) => `
-        <div class="diag-eje">
-          <div class="diag-eje-head"><b>${esc(cap(r.s.verbo))}</b><span class="label-sm">${esc(r.nivel)} · ${r.pct}%</span></div>
-          <div class="meter" role="img" aria-label="${esc(cap(r.s.verbo))}: ${r.pct} por ciento"><i style="width:${Math.max(r.pct, 3)}%"></i></div>
-          <span>${esc(r.nota)}</span>
+      <div class="diag-total ${nivel(ev.total, 0.7)}">
+        <div class="diag-eje-head"><b>Evaluación final</b><span class="diag-pct">${pct(ev.total)}</span></div>
+        <div class="meter" role="img" aria-label="Evaluación final: ${Math.round(ev.total * 100)} por ciento"><i style="width:${Math.max(ev.total * 100, 3)}%"></i></div>
+        <p>${esc(ev.cierre)}</p>
+      </div>
+      <div class="diag-ejes">${ev.bs.map((x) => `
+        <div class="diag-eje ${nivel(x.pct, D.corteAlto)}">
+          <div class="diag-eje-head"><b>${esc(x.b.nom)}</b><span class="label-sm">${pct(x.pct)}</span></div>
+          <div class="meter" role="img" aria-label="${esc(x.b.nom)}: ${Math.round(x.pct * 100)} por ciento"><i style="width:${Math.max(x.pct * 100, 3)}%"></i></div>
+          <span>${esc(x.pct >= D.corteAlto ? x.b.alto : x.b.bajo)}</span>
         </div>`).join("")}
       </div>
+      ${ev.falta.length || ev.parcial.length ? `<div class="diag-brecha">
+        <div class="label">dónde está la brecha</div>
+        ${ev.falta.length ? `<p><b>Hoy no se dispone de:</b> ${esc(ev.falta.join("; "))}.</p>` : ""}
+        ${ev.parcial.length ? `<p><b>Se maneja de manera parcial o informal:</b> ${esc(ev.parcial.join("; "))}.</p>` : ""}
+      </div>` : ""}
       <div class="diag-foco">
         <div class="label">por dónde empezaríamos</div>
-        <b>${esc(cap(foco.s.verbo))} · ${esc(foco.s.t)}</b>
-        <p>${esc(foco.s.frase)}</p>
+        <b>${esc(ev.foco.b.nom)} · ${esc(sv.t)}</b>
+        <p>${esc(sv.frase)}</p>
       </div>`;
+    // Los datos cargados en las preguntas pasan a la calculadora si está vacía
+    $$("[data-extra]", form).forEach((x) => {
+      const c = $(`#calc-${x.dataset.extra}`);
+      if (x.value && !c.value) c.value = x.value;
+    });
+    calcular();
     const cal = $("#diagAgenda");
     cal.hidden = !CALENDAR_URL;
     if (CALENDAR_URL) cal.href = CALENDAR_URL;
@@ -504,11 +631,60 @@
       ? "Enviá el diagnóstico y elegí un horario: llegamos a la reunión con tus respuestas leídas."
       : "Enviá el diagnóstico y proponé en el correo dos o tres horarios que te queden bien.";
   }
-  function enviar() {
+
+  /* --- Calculadora de rentabilidad (misma cuenta que la Auditoría Express) --- */
+  const campo = (k, lbl, ph) => `<div><label for="calc-${k}">${lbl}</label><input id="calc-${k}" data-calc="${k}" type="number" inputmode="decimal" min="0" step="any" placeholder="${ph}" /></div>`;
+  $("#diagResultado").insertAdjacentHTML("afterend", `
+    <details class="calc" id="diagCalc">
+      <summary><b>Calculadora de rentabilidad</b><span class="label-sm">opcional · estimación rápida en pesos</span></summary>
+      <p class="form-note">Cargá cuatro números y mirá cuánto deja tu empresa por mes, dónde está tu punto de equilibrio y cuánto vale mejorar el margen. Se calcula en tu navegador: solo nos llega si marcás la opción de abajo.</p>
+      <div class="form-row">
+        ${campo("facturacion", "Facturación mensual promedio ($)", "Ej.: 25000000")}
+        ${campo("margen", "Margen de contribución (%)", "Ej.: 35")}
+      </div>
+      <div class="form-row">
+        ${campo("cf", "Costos fijos mensuales ($)", "Ej.: 6000000")}
+        ${campo("optim", "Mejora posible del margen (puntos)", "Ej.: 3")}
+      </div>
+      <div id="calcOut" aria-live="polite"></div>
+      <label class="check-line"><input type="checkbox" id="calcEnviar" /> <span>Incluir estas cifras en el correo</span></label>
+    </details>`);
+  function cuentas() {
+    const v = (k) => Number($(`#calc-${k}`).value) || 0;
+    const f = v("facturacion"), mg = v("margen") / 100, cf = v("cf"), opt = v("optim") / 100;
+    if (!f || !mg) return null;
+    const cm = f * mg, rb = cm - cf;
+    return { f, mg, cf, opt, cv: f - cm, cm, rb, util: rb / f, pe: cf / mg, mayor: f * opt };
+  }
+  function calcular() {
+    const c = cuentas(), out = $("#calcOut");
+    if (!c) { out.innerHTML = `<p class="form-note">Cargá la facturación y el margen de contribución para ver el cálculo.</p>`; return; }
+    const fila = (l, v, cls = "") => `<tr><td>${l}</td><td class="num ${cls}">${v}</td></tr>`;
+    const lectura = c.rb < 0
+      ? `Estarías operando ${pesos(c.pe - c.f)} por debajo de tu punto de equilibrio: cada mes sin corregir precios o estructura de costos profundiza la pérdida.`
+      : c.cf ? `Tu margen de seguridad es del ${num((c.f - c.pe) / c.f * 100)}%: es lo que puede caer la facturación antes de entrar en pérdida.` : "";
+    out.innerHTML = `
+      <table class="calc-t">
+        ${fila("Facturación", pesos(c.f))}
+        ${fila("Costos variables", pesos(c.cv))}
+        ${fila("<b>Contribución marginal</b>", `<b>${pesos(c.cm)}</b>`)}
+        ${fila("Costos fijos", pesos(c.cf))}
+        ${fila("<b>Resultado del mes</b>", `<b>${pesos(c.rb)}</b>`, c.rb >= 0 ? "pos" : "neg")}
+        ${fila("Rentabilidad sobre ventas", `${num(c.util * 100)}%`, c.util >= 0 ? "pos" : "neg")}
+        ${fila("Punto de equilibrio mensual", `<b>${pesos(c.pe)}</b>`)}
+      </table>
+      ${lectura ? `<p class="calc-lectura">${esc(lectura)}</p>` : ""}
+      ${c.opt ? `<p class="calc-mejora">Una mejora de <b>${num(c.opt * 100)} puntos</b> en el margen representa <b>${pesos(c.mayor)}</b> más por mes: <b>${pesos(c.mayor * 12)} en el año</b>.</p>`
+        : `<p class="form-note">Cargá una mejora posible del margen para ver su impacto en el año.</p>`}`;
+  }
+  $("#diagCalc").addEventListener("input", (e) => { if (e.target.matches("[data-calc]")) calcular(); });
+
+  /* --- Envío: correo con todo y, de respaldo, copiar el texto --- */
+  function textoDiagnostico() {
     const v = (id) => $(id).value.trim();
     const si = (id, rotulo) => (v(id) ? `${rotulo}${v(id)}` : null); // null = campo vacío, se omite
-    const res = puntajes();
-    const lineas = [
+    const ev = evaluar(), c = $("#calcEnviar").checked && cuentas();
+    return [
       "DATOS DE LA EMPRESA",
       `Nombre: ${v("#ctaNombre")}`,
       `Correo: ${v("#ctaEmail")}`,
@@ -519,20 +695,25 @@
       si("#ctaSistemas", "Sistemas que usan: "),
       si("#ctaMsg", "\nQué quiere resolver:\n"),
       "",
-      "DIAGNÓSTICO",
-      ...res.map((r) => `${cap(r.s.verbo)}: ${r.nivel} (${r.pct}%)`),
+      `DIAGNÓSTICO · evaluación final ${pct(ev.total)}`,
+      ...ev.bs.map((x) => `${x.b.nom}: ${pct(x.pct)}`),
+      ev.falta.length ? `\nNo dispone de: ${ev.falta.join("; ")}.` : null,
+      ev.parcial.length ? `Parcial o informal: ${ev.parcial.join("; ")}.` : null,
       "",
-      "RESPUESTAS",
-      ...DIAGNOSTICO.preguntas.map((p, i) => {
-        const r = form.querySelector(`input[name="q${i}"]:checked`);
-        return `${i + 1}. ${p.q}\n   ${r ? p.o[+r.value] : "sin respuesta"}`;
-      }),
+      "Respuestas: " + PREG.map((q) => `${q.id} ${LBL[resp(q.id)] || "—"}`).join(" · "),
+      c ? `\nCALCULADORA\nFacturación ${pesos(c.f)} · margen ${num(c.mg * 100)}% · costos fijos ${pesos(c.cf)}\nResultado del mes ${pesos(c.rb)} · punto de equilibrio ${pesos(c.pe)}${c.opt ? `\nMejora de ${num(c.opt * 100)} puntos: ${pesos(c.mayor)} por mes, ${pesos(c.mayor * 12)} por año` : ""}` : null,
       CALENDAR_URL ? null : "\nHorarios que me quedan bien: ",
-    ].filter((x) => x !== null);
-    const subject = `Diagnóstico inicial · ${v("#ctaOrg")} · ${v("#ctaNombre")}`;
-    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lineas.join("\n"))}`;
+    ].filter((x) => x !== null).join("\n");
   }
+  function enviar() {
+    const subject = `Diagnóstico inicial · ${$("#ctaOrg").value.trim()} · ${$("#ctaNombre").value.trim()}`;
+    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(textoDiagnostico())}`;
+  }
+  $("#diagAgenda").insertAdjacentHTML("afterend", `<button class="btn btn-ghost" id="diagCopiar" type="button">Copiar diagnóstico</button>`);
+  $("#diagCopiar").addEventListener("click", () => copy(textoDiagnostico(), "Diagnóstico copiado: pegalo en un correo a " + CONTACT_EMAILS[0]));
+
   form.addEventListener("click", (e) => {
+    if (e.target.closest("[data-ir]")) { const f = faltantes(step, false); if (f.length) irA(f[0].el); return; }
     const b = e.target.closest("[data-step]");
     if (!b) return;
     const n = +b.dataset.step;

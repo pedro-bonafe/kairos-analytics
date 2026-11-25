@@ -500,35 +500,66 @@ const CALENDAR_URL = "";
 
 /* --------------------------------------------------------------------------
    Diagnóstico inicial: cuestionario rápido antes de la reunión.
-   Cada pregunta suma a un eje (id de SERVICIOS) y cada opción vale de 0 a 3.
-   El resultado es el porcentaje por eje; `niveles` traduce ese porcentaje.
+   Los tres primeros bloques son la Auditoría Express de Agustín (las mismas
+   14 preguntas, la misma escala y los mismos textos, para que el resultado
+   web se compare con el de la reunión). El cuarto suma datos y sistemas.
+   Escala: Sí = 2 · Más o menos = 1 · No = 0. Claridad = puntos / máximo.
+   `c` es la frase que se usa en "hoy no se dispone de…"; `extra` pide un
+   dato cuando la respuesta es Sí y lo pasa a la calculadora.
+   `eje` (id de SERVICIOS) decide "por dónde empezaríamos".
    -------------------------------------------------------------------------- */
 const DIAGNOSTICO = {
   tamanos: ["1 a 10 personas", "11 a 50 personas", "51 a 200 personas", "Más de 200 personas"],
   modelos: ["Producción o industria", "Comercio o distribución", "Servicios", "Logística o transporte", "Construcción", "Organismo público", "Otro"],
-  preguntas: [
-    { eje: "finanzas", q: "¿Cómo calculan el costo de sus productos o servicios?", o: [
-      "No lo calculamos", "Con una estimación general", "En una planilla que se actualiza cada tanto", "Con un costeo por producto, actualizado"] },
-    { eje: "finanzas", q: "¿Saben cuánta plata van a tener en los próximos dos o tres meses?", o: [
-      "No", "Tenemos una idea aproximada", "Hay una proyección en planilla", "Sí, con un flujo de fondos que se revisa cada semana"] },
-    { eje: "finanzas", q: "¿Con qué frecuencia miran el resultado y la rentabilidad?", o: [
-      "Al cierre del ejercicio, con el contador", "Cada tanto, cuando hace falta", "Todos los meses", "Todas las semanas o en un tablero"] },
-    { eje: "integracion", q: "¿Dónde están hoy los datos de la empresa?", o: [
-      "En papel y planillas sueltas", "En planillas y algún sistema", "En un sistema principal, con planillas al costado", "En sistemas conectados entre sí"] },
-    { eje: "integracion", q: "¿Cuánto tardan en tener un número consolidado (ventas, stock, caja)?", o: [
-      "Días, o no se puede", "Un día de trabajo", "Unas horas", "Está en un tablero al día"] },
-    { eje: "integracion", q: "¿Cuánto trabajo manual hay de copiar, pegar o transcribir datos?", o: [
-      "Mucho, todos los días", "Bastante", "Algo", "Casi nada"] },
-    { eje: "integracion", q: "¿Usan automatizaciones o IA en algún proceso?", o: [
-      "No", "Probamos herramientas sueltas", "Algunas automatizaciones", "Sí, integradas en procesos y con controles"] },
-    { eje: "software", q: "¿El sistema que usan se adapta a cómo trabajan?", o: [
-      "No tenemos sistema", "Tenemos uno, pero mucho queda afuera", "Bastante, con planillas al costado", "Sí, cubre la operación"] },
-    { eje: "software", q: "Si una persona clave se va, ¿qué pasa con su información?", o: [
-      "Se pierde", "Se recupera con mucho esfuerzo", "Queda documentada en parte", "Queda en el sistema, con su historial"] },
+  escala: [["si", "Sí", 2], ["mm", "Más o menos", 1], ["no", "No", 0]],
+  bloques: [
+    { id: "cp", eje: "finanzas", nom: "Costos y Precios", desc: "Qué tan preciso es el conocimiento del costo y de cómo se forma el precio.",
+      qs: [
+        { id: "cp1", c: "los costos variables unitarios discriminados", t: "¿Tenés discriminados tus costos variables unitarios?" },
+        { id: "cp2", c: "la identificación del producto o servicio más rentable", t: "¿Sabés cuál es tu producto o servicio más rentable?" },
+        { id: "cp3", c: "el margen de contribución del producto principal", t: "¿Sabés qué margen de contribución tenés sobre tu producto o servicio principal?",
+          extra: { k: "margen", lbl: "¿Cuál es el margen? (%)" } },
+        { id: "cp4", c: "el costo financiero e impositivo incorporado al precio", t: "¿Tenés en cuenta los costos financieros e impositivos al fijar el precio de venta?" },
+      ],
+      alto: "El nivel de claridad sobre precios y costos es alto. Aun así, hay márgenes que se escapan sin que se vean.",
+      bajo: "Se opera con muy baja claridad sobre costos y precios. El resto es intuición, y eso sale caro." },
+    { id: "ec", eje: "finanzas", nom: "Análisis Económico", desc: "Si la empresa sabe cuánto gana, con qué producto y a partir de qué volumen.",
+      qs: [
+        { id: "ec1", c: "claridad sobre qué es un estado de resultados económico", t: "¿Hay claridad sobre qué es un estado de resultados económico?" },
+        { id: "ec2", c: "un estado de resultados mensual actualizado", t: "¿Se tiene un estado de resultados mensual actualizado?" },
+        { id: "ec3", c: "el detalle de los costos fijos mensuales", t: "¿Se conocen los costos fijos mensuales?",
+          extra: { k: "cf", lbl: "Monto mensual de costos fijos ($)" } },
+        { id: "ec4", c: "el punto de equilibrio mensual", t: "¿Se conoce el punto de equilibrio mensual?" },
+        { id: "ec5", c: "certeza sobre la rentabilidad real", t: "¿Se conoce la rentabilidad con certeza?" },
+        { id: "ec6", c: "capacidad de simular escenarios antes de decidir", t: "¿Se pueden tomar decisiones simulando escenarios sobre el estado de resultados?" },
+      ],
+      alto: "La película económica se entiende bien. El paso siguiente es optimizar márgenes y escalar con estrategia.",
+      bajo: "Hay algunas cifras, pero las decisiones no se toman con la foto completa. Eso puede estar costando plata todos los meses." },
+    { id: "fi", eje: "finanzas", nom: "Análisis Financiero", desc: "Si el dinero está bajo control y si la caja se anticipa o se sufre.",
+      qs: [
+        { id: "fi1", c: "la distinción entre el resultado económico y el financiero", t: "¿Hay claridad sobre la diferencia entre el resultado económico y el financiero?" },
+        { id: "fi2", c: "un control exhaustivo del flujo de fondos", t: "¿Se lleva un control exhaustivo del flujo de fondos (entradas y salidas)?" },
+        { id: "fi3", c: "el calendario de cobros, pagos y vencimientos", t: "¿Hay fechas claras de pagos pendientes, cobros y vencimientos de facturas y cheques?" },
+        { id: "fi4", c: "proyecciones de disponibilidades a tres meses", t: "¿Se cuenta con proyecciones de disponibilidades a 3 meses?" },
+      ],
+      alto: "Hay buen control financiero, pero sin planificación se puede entrar en estrés de caja en cualquier momento.",
+      bajo: "Se puede estar vendiendo bien y aun así el dinero no aparece, porque se va por huecos que hoy no se ven." },
+    { id: "dt", eje: "integracion", nom: "Datos y Sistemas", desc: "Si la información circula sola o hay que juntarla a mano cada vez.",
+      qs: [
+        { id: "dt1", c: "los datos de la empresa conectados en una base común", t: "¿Los datos de la empresa (ventas, stock, bancos, producción) están conectados entre sí, sin depender de planillas sueltas?" },
+        { id: "dt2", c: "los números consolidados disponibles al día", t: "¿Podés ver ventas, stock y caja consolidados al día, sin pedir un informe?" },
+        { id: "dt3", c: "las tareas de carga y transcripción automatizadas", t: "¿Las tareas de copiar, pegar o transcribir datos están automatizadas?" },
+        { id: "dt4", c: "un sistema de gestión que cubra la operación", t: "¿El sistema que usan cubre la operación, sin planillas al costado?" },
+      ],
+      alto: "La información circula bien entre los sistemas. El paso siguiente es automatizar lo que queda y sumar análisis sobre esa base.",
+      bajo: "Los datos existen, pero están repartidos y se juntan a mano. Cada número llega tarde y cuesta horas de trabajo." },
   ],
-  niveles: [
-    [34, "Inicial", "Hay mucho valor por capturar con pasos cortos."],
-    [67, "En desarrollo", "La base existe; falta conectarla y que se actualice sola."],
-    [101, "Avanzado", "El foco está en afinar y automatizar lo que ya funciona."],
+  // Evaluación final (cortes de la Auditoría Express)
+  cierre: [
+    [0.40, "Se están tomando decisiones con menos del 40% de la información clave. Es manejar a ciegas: el negocio puede estar en rojo sin que nadie lo sepa."],
+    [0.70, "El negocio funciona, pero con parches. Así no se crece y mucho menos se escala. Hay información, pero no hay claridad."],
+    [1.01, "Hay una base sólida. Lo que falta ahora es precisión, optimización y estrategia para crecer sin caos."],
   ],
+  // Lectura de cada bloque: alto desde este valor
+  corteAlto: 0.75,
 };
