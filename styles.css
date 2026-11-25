@@ -610,3 +610,11 @@ table.t select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--l
 .contact-form .check-line { display: flex; gap: 10px; align-items: center; margin-top: 16px; font: 15px var(--font); color: var(--ink); cursor: pointer; }
 .contact-form .check-line input { width: 18px; min-height: 18px; height: 18px; padding: 0; accent-color: var(--brand); }
 @media (max-width: 640px) { .diag-opts { grid-template-columns: repeat(3, minmax(0, 1fr)); } .diag-opts label span { padding: 10px 6px; font-size: 14px; } }
+
+/* Resultado del envío del diagnóstico */
+.form-status { margin-top: 16px; padding: 12px 16px; border-radius: var(--radius); color: var(--ink); font-size: 15px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; border: 1px solid; }
+.form-status[hidden] { display: none; }
+.form-status-ok { background: var(--ok-soft); border-color: var(--ok); }
+.form-status-bad { background: var(--bad-soft); border-color: var(--bad); }
+.form-status .link-btn { color: var(--ink); font-weight: 700; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }

@@ -715,7 +715,9 @@
     if (CALENDAR_URL) cal.href = CALENDAR_URL;
     $("#diagAgendaNota").textContent = CALENDAR_URL
       ? "Enviá el diagnóstico y elegí un horario: llegamos a la reunión con tus respuestas leídas."
-      : "Enviá el diagnóstico y proponé en el correo dos o tres horarios que te queden bien.";
+      : WEB3FORMS_KEY
+        ? "Enviá el diagnóstico y te escribimos para coordinar la reunión."
+        : "Enviá el diagnóstico y proponé en el correo dos o tres horarios que te queden bien.";
   }
 
   /* --- Calculadora de rentabilidad (misma cuenta que la Auditoría Express) --- */
@@ -788,13 +790,66 @@
       "",
       "Respuestas: " + PREG.map((q) => `${q.id} ${LBL[resp(q.id)] || "—"}`).join(" · "),
       c ? `\nCALCULADORA\nFacturación ${pesos(c.f)} · margen ${num(c.mg * 100)}% · costos fijos ${pesos(c.cf)}\nResultado del mes ${pesos(c.rb)} · punto de equilibrio ${pesos(c.pe)}${c.opt ? `\nMejora de ${num(c.opt * 100)} puntos: ${pesos(c.mayor)} por mes, ${pesos(c.mayor * 12)} por año` : ""}` : null,
-      CALENDAR_URL ? null : "\nHorarios que me quedan bien: ",
+      CALENDAR_URL || WEB3FORMS_KEY ? null : "\nHorarios que me quedan bien: ",
     ].filter((x) => x !== null).join("\n");
   }
-  function enviar() {
-    const subject = `Diagnóstico inicial · ${$("#ctaOrg").value.trim()} · ${$("#ctaNombre").value.trim()}`;
-    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(textoDiagnostico())}`;
+  // Envío: por Web3Forms si hay clave (sin salir de la página); si no hay
+  // clave o el servicio falla, queda el programa de correo como alternativa.
+  const envioBox = document.createElement("div");
+  envioBox.className = "form-status";
+  envioBox.setAttribute("role", "status");
+  envioBox.hidden = true;
+  $(".diag-nav", steps[2]).after(envioBox);
+  form.insertAdjacentHTML("beforeend", `<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />`);
+  $(".label-sm.form-note", steps[2]).textContent = (WEB3FORMS_KEY
+    ? "Nos llega sin que salgas de esta página. "
+    : "Se abre tu programa de correo con las respuestas listas para enviar. ") + "Es una lectura orientativa, no un informe.";
+  const asunto = () => `Diagnóstico inicial · ${$("#ctaOrg").value.trim()} · ${$("#ctaNombre").value.trim()}`;
+  const abrirCorreo = () => {
+    location.href = `mailto:${CONTACT_EMAILS.join(",")}?subject=${encodeURIComponent(asunto())}&body=${encodeURIComponent(textoDiagnostico())}`;
+  };
+  function estadoEnvio(tipo, html) {
+    envioBox.className = `form-status form-status-${tipo}`;
+    envioBox.innerHTML = html;
+    envioBox.hidden = false;
   }
+  let enviando = false, enviado = false;
+  async function enviar() {
+    if (!WEB3FORMS_KEY) return abrirCorreo();
+    if (enviando || enviado) return;
+    if (form.botcheck.checked) return; // relleno automático de un bot
+    const btn = $("[type=submit]", steps[2]), txt = btn.innerHTML;
+    enviando = true;
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+    envioBox.hidden = true;
+    try {
+      const r = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: asunto(),
+          from_name: `${BRAND} · diagnóstico web`,
+          replyto: $("#ctaEmail").value.trim(),
+          message: textoDiagnostico(),
+        }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok || data.success === false) throw new Error(data.message || `HTTP ${r.status}`);
+      enviado = true;
+      btn.textContent = "Diagnóstico enviado ✓";
+      estadoEnvio("ok", `<b>¡Listo! Recibimos tu diagnóstico.</b><span>Te respondemos a ${esc($("#ctaEmail").value.trim())} ${CALENDAR_URL ? "y, si querés, ya podés elegir un horario." : "para coordinar la reunión."}</span>`);
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.innerHTML = txt;
+      estadoEnvio("bad", `<b>No pudimos enviarlo.</b><span>Probá de nuevo en un momento o <button class="link-btn" type="button" data-mail>envialo desde tu correo</button>.</span>`);
+    } finally {
+      enviando = false;
+    }
+  }
+  envioBox.addEventListener("click", (e) => { if (e.target.closest("[data-mail]")) abrirCorreo(); });
   $("#diagAgenda").insertAdjacentHTML("afterend", `<button class="btn btn-ghost" id="diagCopiar" type="button">Copiar diagnóstico</button>`);
   $("#diagCopiar").addEventListener("click", () => copy(textoDiagnostico(), "Diagnóstico copiado: pegalo en un correo a " + CONTACT_EMAILS[0]));
 

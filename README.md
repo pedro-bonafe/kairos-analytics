@@ -1,20 +1,19 @@
 # Landing · KAIROS Analytics
 
-Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abrir `index.html` en el navegador o publicarla tal cual en GitHub Pages.
+Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abrir `index.html` en el navegador o publicarla tal cual en GitHub Pages. Las demos viven en una página aparte, `demo/index.html` (ruta `/demo/`).
 
 > Marca: **KAIROS Analytics** (definida el 20-nov-2026). Se cambia en `BRAND` en `data.js` y en el `<title>` y `og:site_name` de `index.html`. Logo: cubo de celdas (propuesta 07), en `files/logo-claro.svg` y `files/logo-oscuro.svg`; elegido el 20-nov-2026 como provisorio.
 
 ## Recorrido de la página
 
-1. **Inicio**: titular, mosaico animado "de disperso a ordenado" y franja de datos verificables con contador
-2. **Qué hacemos**: los tres ejes (Conectar, Medir, Gestionar) como pestañas; cada uno cuenta el problema, lo que hacemos, la solución y qué incluye
-3. **Demos**: galería con las 7 demos interactivas; cada tarjeta abre la demo en un modal
-4. **Sectores y casos**: primer nivel Privado / Público (`AMBITOS`) y segundo nivel por subsector (Industrias, Comercios, Logística, Construcción; Ministerios, Municipios). Cada uno trae el contexto del sector, su gráfico animado (caja a 13 semanas o mapa de celdas), los tres ejes aplicados y las fichas de los casos; los subsectores sin caso publicado invitan al diagnóstico
-5. **Cómo trabajamos**: cinco pasos con una línea que se completa al entrar en pantalla
-6. **Por qué nosotros**: seis diferenciales
-7. **Equipo**
-8. **Quiénes confían en nosotros**: oculta hasta cargar `TESTIMONIOS` en `data.js`
-9. **Diagnóstico inicial y reunión**: tres pasos. (1) Datos de la empresa; (2) las 14 preguntas de la Auditoría Express de Agustín (Costos y Precios, Análisis Económico, Análisis Financiero) más 4 de Datos y Sistemas, con escala Sí / Más o menos / No; (3) evaluación final con los cortes 40 % y 70 %, lectura por bloque, brecha, por dónde empezar y calculadora de rentabilidad opcional. Los campos obligatorios avisan qué falta. Envía todo por correo (o se copia) y, si `CALENDAR_URL` tiene un enlace, ofrece elegir horario
+1. **Inicio**: titular, mosaico animado "de disperso a ordenado" sobre ejes con flecha, y franja de datos verificables con contador
+2. **Qué hacemos**: los tres ejes (Conectar, Medir, Construir) como pestañas; cada uno cuenta el problema, lo que hacemos, la solución y qué incluye, y termina con el botón "Ver demos"
+3. **Sectores y casos**: primer nivel Privado / Público (`AMBITOS`) y segundo nivel por subsector (Industrias, Comercios, Logística, Construcción; Ministerios, Municipios). Cada uno trae el contexto del sector, su gráfico animado (fábricas para Industrias, góndolas para Comercios, rutas para Logística, obras de bloques para Construcción, red de áreas para Ministerios y mapa de celdas para Municipios; una vertical puede pisar el gráfico de su sector con sus propios `grafico*`), los tres ejes aplicados y las fichas de los casos; los subsectores sin caso publicado invitan al diagnóstico
+4. **Cómo trabajamos**: una columna por eje (Conectar, Medir, Construir) con sus pasos (`PASOS`), y una línea que se completa al entrar en pantalla
+5. **Por qué nosotros**: seis diferenciales
+6. **Equipo**
+7. **Quiénes confían en nosotros**: oculta hasta cargar `TESTIMONIOS` en `data.js`
+8. **Diagnóstico inicial y reunión**: tres pasos. (1) Datos de la empresa; (2) las 14 preguntas de la Auditoría Express de Agustín (Costos y Precios, Análisis Económico, Análisis Financiero) más 4 de Datos y Sistemas, con escala Sí / Más o menos / No; (3) evaluación final con los cortes 40 % y 70 %, lectura por bloque, brecha, por dónde empezar y calculadora de rentabilidad opcional. Los campos obligatorios avisan qué falta. Se envía sin salir de la página con Web3Forms (`WEB3FORMS_KEY`); sin clave, o si el servicio falla, abre el programa de correo. También se puede copiar. Si `CALENDAR_URL` tiene un enlace, ofrece elegir horario
 
 ## Archivos
 
@@ -23,14 +22,15 @@ Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abr
 | `index.html` | Estructura y textos fijos (titulares, equipo, contacto) |
 | `data.js` | **Contenido editable**: marca, correos, datos de la franja, ejes, ámbitos, sectores, pasos, diferenciales, casos, testimonios, agenda y cuestionario del diagnóstico |
 | `demos.js` | Las demos interactivas (datos ficticios, todo en el navegador) |
-| `app.js` | Render, gráficos SVG animados, pestañas, navegación, tema y modal |
+| `demo/index.html`, `demo/demo.js` | Página de demos: galería y modal. Usa `data.js`, `demos.js` y los estilos de la raíz |
+| `app.js` | Render de la landing, gráficos SVG animados, pestañas, navegación, tema y diagnóstico |
 | `tokens.css` | Paleta y tipografía de la línea estética "Mosaico de datos", en claro y oscuro |
 | `styles.css` | Estilos de la página (solo tokens) y, al final, los de las demos |
 | `files/*-480.jpg` | Fotos del equipo. Los `.png` originales no se publican (`.gitignore`) |
 
 ## Demos
 
-Enlace directo: `index.html#demo-<clave>`. El botón "Copiar enlace" del modal lo genera.
+Enlace directo: `demo/#demo-<clave>`. El botón "Copiar enlace" del modal lo genera. Los enlaces viejos (`index.html#demo-<clave>`) redirigen a la página de demos.
 
 | Clave | Qué muestra |
 |---|---|
@@ -54,7 +54,7 @@ Enlace directo: `index.html#demo-<clave>`. El botón "Copiar enlace" del modal l
 ## Pendiente
 
 - Dominio (revisar disponibilidad de dominio y marca en INPI). El logo actual (cubo 07) puede cambiar.
-- Contacto: las casillas están en `CONTACT_EMAILS` (`data.js`) y el diagnóstico escribe a todas a la vez. Usa `mailto:`; para recibir mensajes sin depender del cliente de correo del visitante, conectar un servicio de formularios (Formspree, Getform o similar).
+- Contacto: crear la clave en web3forms.com con la casilla que recibe los diagnósticos y cargarla en `WEB3FORMS_KEY` (`data.js`). Web3Forms escribe a una sola casilla por clave: para que llegue a las dos de `CONTACT_EMAILS`, reenviar desde esa casilla o sumar la otra en el panel de Web3Forms.
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
 - Sección "Quiénes confían en nosotros": cargar en `TESTIMONIOS` solo clientes reales que autorizaron, con su cita textual.
 - Agenda: completar `CALENDAR_URL` (Google Calendar con programación de citas, Calendly o Cal.com).

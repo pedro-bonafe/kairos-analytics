@@ -514,6 +514,14 @@ const TESTIMONIOS = [];
 const CALENDAR_URL = "";
 
 /* --------------------------------------------------------------------------
+   Envío del diagnóstico sin salir de la página, con Web3Forms
+   (web3forms.com). La "access key" se crea con el correo que recibe los
+   diagnósticos; es pública por diseño y puede ir en el código.
+   Vacía = se abre el programa de correo del visitante (mailto:), como antes.
+   -------------------------------------------------------------------------- */
+const WEB3FORMS_KEY = "";
+
+/* --------------------------------------------------------------------------
    Diagnóstico inicial: cuestionario rápido antes de la reunión.
    Los tres primeros bloques son la Auditoría Express de Agustín (las mismas
    14 preguntas, la misma escala y los mismos textos, para que el resultado
