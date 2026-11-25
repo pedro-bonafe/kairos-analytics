@@ -191,12 +191,25 @@ const SECTORES = [
   },
 ];
 
+/* --------------------------------------------------------------------------
+   Cómo trabajamos: los pasos de cada eje (id de SERVICIOS), en orden.
+   -------------------------------------------------------------------------- */
 const PASOS = [
-  ["Relevamiento", "Analizamos el proceso real, los sistemas y las planillas, hasta el nivel de las fórmulas."],
-  ["Especificación", "Documentamos qué va a hacer cada módulo y lo validamos con quienes lo van a usar."],
-  ["Desarrollo por fases", "Construimos en etapas cortas, con pruebas automatizadas y avances que podés ver en todo momento."],
-  ["Puesta en marcha", "Desplegamos, migramos los datos y capacitamos a los equipos."],
-  ["Acompañamiento", "Medimos el uso, corregimos y sumamos lo que sigue sobre una base ordenada."],
+  { eje: "integracion", pasos: [
+    ["Relevamiento de fuentes", "Recorremos los sistemas, las planillas y los circuitos de información, hasta el nivel de las fórmulas."],
+    ["Integración", "Reunimos las fuentes en una base de datos propia que se actualiza sola, sin reemplazar lo que ya funciona."],
+    ["Automatización", "Lo que hoy es exportar, copiar y transcribir pasa a ser automático, con agentes de IA donde suman y con controles."],
+  ] },
+  { eje: "finanzas", pasos: [
+    ["Estructura de costos", "Ordenamos los costos por producto, por línea y por centro de costos, junto con quienes los conocen."],
+    ["Modelo económico y financiero", "Armamos el estado de resultados de gestión, el punto de equilibrio y el flujo de fondos proyectado."],
+    ["Tableros y seguimiento", "Llevamos los números a tableros que se actualizan con tus datos y los revisamos con vos cada mes."],
+  ] },
+  { eje: "software", pasos: [
+    ["Especificación", "Documentamos qué va a hacer cada módulo y lo validamos con quienes lo van a usar."],
+    ["Desarrollo por fases", "Construimos en etapas cortas, con pruebas automatizadas y avances que podés ver en todo momento."],
+    ["Puesta en marcha y acompañamiento", "Desplegamos, migramos los datos, capacitamos a los equipos y sumamos lo que sigue sobre una base ordenada."],
+  ] },
 ];
 
 const DIFERENCIALES = [

@@ -522,3 +522,15 @@ table.t select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--l
 .demo-cta-bar { display: flex; flex-wrap: wrap; gap: 24px 48px; align-items: center; justify-content: space-between; }
 .demo-cta-bar h2 { max-width: 640px; }
 @media (max-width: 640px) { .demo-back { display: none; } }
+
+/* ---------- Cómo trabajamos: una columna por eje ---------- */
+.method-cols { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
+.method-head { border-top: 1px solid var(--line-strong); padding: 24px 0 8px; display: grid; gap: 6px; }
+.method-verbo { font-size: clamp(32px, 3.4vw, 48px); line-height: 1; font-weight: 800; letter-spacing: -0.045em; }
+.method-nombre { font-size: 15px; font-weight: 500; color: var(--ink-2); }
+.method-pasos { list-style: none; margin: 0; padding: 0; }
+.method-pasos .rule-item { border-top-color: var(--line); padding: 18px 0 22px; gap: 6px; }
+.method-pasos .rule-item > b { font-size: 17px; }
+@media (max-width: 1000px) {
+  .method-cols { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+}

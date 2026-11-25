@@ -342,7 +342,25 @@
       <b>${esc(it[0])}</b>
       <span>${esc(it[1])}</span>
     </${tag}>`).join("");
-  $("#pasosGrid").innerHTML = pares(PASOS, true, "li");
+  // Cómo trabajamos: una columna por eje, con sus pasos numerados
+  $("#pasosGrid").innerHTML = PASOS.map((g, i) => {
+    const s = SERVICIOS.find((x) => x.id === g.eje);
+    return `
+    <li class="method-col">
+      <div class="method-head">
+        <span class="label">0${i + 1}</span>
+        <span class="method-verbo">${esc(cap(s.verbo))}.</span>
+        <span class="method-nombre">${esc(s.t)}</span>
+      </div>
+      <ol class="method-pasos">${g.pasos.map((p, j) => `
+        <li class="rule-item" style="--d:${(i * 3 + j) * 110}ms">
+          <div class="label-sm">${i + 1}.${j + 1}</div>
+          <b>${esc(p[0])}</b>
+          <span>${esc(p[1])}</span>
+        </li>`).join("")}
+      </ol>
+    </li>`;
+  }).join("");
   $("#diferencialesGrid").innerHTML = pares(DIFERENCIALES, false, "div");
 
   /* ------------------------------------------------------------------------
