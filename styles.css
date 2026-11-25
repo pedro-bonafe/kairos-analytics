@@ -332,9 +332,9 @@ details.more p { margin: 12px 0 0; }
 .sin-caso .actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 /* Quiénes confían en nosotros */
-/* Confían en nosotros: una fila de celdas, como el mosaico, con los logos en gris */
-.clientes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-left: 1px solid var(--line); }
-.clientes li { min-height: 132px; display: grid; place-items: center; padding: 20px 16px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+/* Confían en nosotros: una fila de logos en gris, sin cuadrícula */
+.clientes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px 24px; }
+.clientes li { min-height: 96px; display: grid; place-items: center; }
 .cliente-logo { display: block; max-width: 100%; height: auto; opacity: .5; transition: opacity .3s; }
 .clientes li:hover .cliente-logo { opacity: .9; }
 :root[data-theme="dark"] .cliente-logo { filter: invert(1); }
