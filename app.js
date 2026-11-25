@@ -198,6 +198,7 @@
         </div>
         <div class="label eje-incluye">qué incluye</div>
         <ul class="chips-list">${s.items.map((it) => `<li><b>${esc(it[0])}</b><span>${esc(it[1])}</span></li>`).join("")}</ul>
+        <a class="btn btn-secondary btn-sm eje-demos" href="demo/">Ver demos <span class="arrow" aria-hidden="true">→</span></a>
       </div>`;
   }
   tabKeys(ejesTabs, ".eje-tab", (b, focus) => showEje(+b.dataset.i, focus));
@@ -218,23 +219,9 @@
     });
   }
 
-  /* ------------------------------------------------------------------------
-     Galería de demos
-     ------------------------------------------------------------------------ */
-  const PROYECTOS = VERTICALES.flatMap((v) => v.grupos.flatMap((g) => g.proyectos.map((p) => ({ ...p, vertical: v }))));
+  // Rótulos de cada eje, para las fichas de casos y el diagnóstico
   const nombreServicio = Object.fromEntries(SERVICIOS.map((s) => [s.id, s.t]));
   const verboServicio = Object.fromEntries(SERVICIOS.map((s) => [s.id, s.verbo]));
-  const demoBtn = (p, cls, txt) => `<button class="${cls}" data-demo="${p.demo}" data-title="${esc(p.demoTitulo)}" data-sub="${esc(p.titulo)}">${txt}</button>`;
-  $("#demoTiles").innerHTML = PROYECTOS.filter((p) => p.demo).map((p, i) => `
-    <article class="tile reveal" style="--d:${i * 60}ms">
-      <div class="tile-top">
-        <span class="label-sm">${esc(p.vertical.nombre.toLowerCase())} · ${p.servicios.map((id) => verboServicio[id]).join(" + ")}</span>
-        <span class="tile-n label-sm">0${i + 1}</span>
-      </div>
-      <h3>${esc(p.demoTitulo)}</h3>
-      <p>${esc(p.demoQue)}</p>
-      ${demoBtn(p, "tile-btn", `Abrir demo <span class="arrow" aria-hidden="true">→</span>`)}
-    </article>`).join("");
 
   /* ------------------------------------------------------------------------
      Sectores y casos: primer nivel por ámbito (privado / público) y segundo
@@ -269,7 +256,6 @@
             <h4>${esc(p.titulo)}</h4>
             <div class="client">${esc(p.cliente)}</div>
           </div>
-          ${demoBtn(p, "btn btn-primary btn-sm", "Ver demo")}
         </div>
         <p class="pcard-lead">${esc(p.lead)}</p>
         <div class="pcols">
@@ -319,7 +305,7 @@
         <p>Todavía no publicamos un caso de ${esc(v.nombre.toLowerCase())}. Los problemas se parecen a los de otros sectores, y los sistemas de las demos se adaptan a tu operación.</p>
         <div class="actions">
           <a class="btn btn-primary btn-sm" href="#contacto">Hacer el diagnóstico</a>
-          <a class="btn btn-secondary btn-sm" href="#demos">Ver las demos <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-secondary btn-sm" href="demo/">Ver las demos <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>`;
     v.grupos.forEach((g) => {
@@ -377,60 +363,12 @@
   selectAmbito(AMBITOS[0].id);
 
   /* ------------------------------------------------------------------------
-     Modal de demos
+     Las demos viven en /demo. Los enlaces viejos (index.html#demo-costeo)
+     se redirigen a la misma demo en la página nueva.
      ------------------------------------------------------------------------ */
-  const modal = $("#demoModal");
-  let lastFocus = null, currentKey = null;
-  function openDemo(key, title, sub) {
-    if (!DEMOS[key]) return;
-    lastFocus = document.activeElement;
-    currentKey = key;
-    $("#demoTitle").textContent = title;
-    $("#demoSub").textContent = sub;
-    const body = $("#demoBody");
-    body.innerHTML = `<span class="disclaimer">Demo ilustrativa con datos ficticios. No representa información de clientes.</span><div id="demoRoot"></div>`;
-    modal.hidden = false;
-    requestAnimationFrame(() => modal.classList.add("open"));
-    document.body.style.overflow = "hidden";
-    try { DEMOS[key]($("#demoRoot")); } catch (err) { $("#demoRoot").innerHTML = `<div class="alert alert-bad">No se pudo cargar la demo.</div>`; console.error(err); }
-    history.replaceState(null, "", `#demo-${key}`);
-    $(".modal-head [data-close]", modal).focus();
-  }
-  function closeDemo() {
-    modal.classList.remove("open");
-    modal.hidden = true;
-    document.body.style.overflow = "";
-    $("#demoBody").innerHTML = "";
-    currentKey = null;
-    history.replaceState(null, "", location.pathname + location.search);
-    if (lastFocus) lastFocus.focus();
-  }
-  document.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-demo]");
-    if (b) openDemo(b.dataset.demo, b.dataset.title, b.dataset.sub);
-  });
-  $$("[data-close]", modal).forEach((el) => el.addEventListener("click", closeDemo));
-  $("#demoShare").addEventListener("click", () => copy(`${location.origin}${location.pathname}#demo-${currentKey}`, "Enlace a la demo copiado"));
-  document.addEventListener("keydown", (e) => {
-    if (modal.hidden) return;
-    if (e.key === "Escape") return closeDemo();
-    if (e.key !== "Tab") return;
-    // Mantener el foco dentro del modal
-    const f = $$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', modal.querySelector(".modal-dialog"))
-      .filter((el) => !el.disabled && el.offsetParent !== null);
-    if (!f.length) return;
-    const first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  });
-
-  // Enlace directo a una demo: index.html#demo-costeo, #demo-reclamos, etc.
   function demoFromHash() {
     const dm = location.hash.match(/^#demo-(\w+)$/);
-    const p = dm && PROYECTOS.find((x) => x.demo === dm[1]);
-    if (!p || currentKey === p.demo) return;
-    selectVertical(p.vertical.id);
-    openDemo(p.demo, p.demoTitulo, p.titulo);
+    if (dm) location.replace(`demo/#demo-${dm[1]}`);
   }
   addEventListener("hashchange", demoFromHash);
   demoFromHash();

@@ -27,7 +27,7 @@ const PRUEBAS = [
   [2200, "+", "gestiones migradas y activas en una plataforma de gobierno en uso diario"],
   [300, "+", "pruebas de integración en el sistema de gestión de un exportador"],
   [25, "+", "decisiones de arquitectura documentadas en un solo proyecto"],
-  [7, "", "demos interactivas para probar en esta página"],
+  [7, "", "demos interactivas para probar en línea"],
 ];
 
 // Nombre con el que la página se refiere a conectar, medir y construir.

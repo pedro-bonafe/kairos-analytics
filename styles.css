@@ -515,3 +515,10 @@ table.t select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--l
 @keyframes modalIn { from { opacity: 0; transform: translateY(24px) scale(.98); } }
 
 .lead-impacto { color: var(--ink); font-weight: 700; }
+
+/* ---------- Página de demos (/demo) y acceso desde Qué hacemos ---------- */
+.eje-demos { margin-top: 32px; }
+.demo-hero .section-head h1 { font-size: clamp(36px, 4.4vw, 60px); }
+.demo-cta-bar { display: flex; flex-wrap: wrap; gap: 24px 48px; align-items: center; justify-content: space-between; }
+.demo-cta-bar h2 { max-width: 640px; }
+@media (max-width: 640px) { .demo-back { display: none; } }
