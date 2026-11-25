@@ -27,6 +27,7 @@ Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abr
 | `tokens.css` | Paleta y tipografía de la línea estética "Mosaico de datos", en claro y oscuro |
 | `styles.css` | Estilos de la página (solo tokens) y, al final, los de las demos |
 | `files/*-480.jpg` | Fotos del equipo. Los `.png` originales no se publican (`.gitignore`) |
+| `files/og-image.png` | Imagen para compartir (1200 × 630): logo, titular, lema y mosaico. Se usa en `og:image` de las dos páginas |
 
 ## Demos
 
@@ -59,4 +60,3 @@ Enlace directo: `demo/#demo-<clave>`. El botón "Copiar enlace" del modal lo gen
 - Sección "Quiénes confían en nosotros": cargar en `TESTIMONIOS` solo clientes reales que autorizaron, con su cita textual.
 - Agenda: completar `CALENDAR_URL` (Google Calendar con programación de citas, Calendly o Cal.com).
 - Comercios, Logística y Construcción no tienen caso publicado; los textos de esos sectores son un borrador para revisar.
-- Imagen para compartir (`og:image`, 1200 × 630) cuando haya logo.

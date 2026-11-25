@@ -1,4 +1,5 @@
 files/*.png
+!files/og-image.png
 .DS_Store
 Thumbs.db
 %HOMEDRIVE%%HOMEPATH%/
