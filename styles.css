@@ -332,6 +332,15 @@ details.more p { margin: 12px 0 0; }
 .sin-caso .actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 /* Quiénes confían en nosotros */
+/* Confían en nosotros: una fila de celdas, como el mosaico, con los logos en gris */
+.clientes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-left: 1px solid var(--line); }
+.clientes li { min-height: 132px; display: grid; place-items: center; padding: 20px 16px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.cliente-logo { display: block; max-width: 100%; background-color: var(--ink-3); -webkit-mask: var(--src) center / contain no-repeat; mask: var(--src) center / contain no-repeat; transition: background-color .3s; }
+.clientes li:hover .cliente-logo { background-color: var(--ink); }
+.clientes:empty, .testimonios:empty { display: none; }
+.clientes + .testimonios { margin-top: 48px; }
+@media (max-width: 1000px) { .clientes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .clientes { grid-template-columns: repeat(2, minmax(0, 1fr)); } .clientes li { min-height: 104px; } }
 .testimonios { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
 .testimonio { margin: 0; border-top: 1px solid var(--line-strong); padding-top: 20px; display: grid; gap: 14px; align-content: start; }
 .testimonio img { height: 40px; width: auto; max-width: 160px; object-fit: contain; }

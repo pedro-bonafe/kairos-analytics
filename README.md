@@ -12,7 +12,7 @@ Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abr
 4. **Cómo trabajamos**: una columna por eje (Conectar, Medir, Construir) con sus pasos (`PASOS`), y una línea que se completa al entrar en pantalla
 5. **Por qué nosotros**: seis diferenciales
 6. **Equipo**
-7. **Quiénes confían en nosotros**: oculta hasta cargar `TESTIMONIOS` en `data.js`
+7. **Confían en nosotros**: logos de clientes en gris (`CLIENTES` en `data.js`, SVG de un solo color en `files/clientes/`) y, si se cargan, testimonios (`TESTIMONIOS`). Oculta si las dos listas están vacías
 8. **Diagnóstico inicial y reunión**: tres pasos. (1) Datos de la empresa; (2) las 14 preguntas de la Auditoría Express de Agustín (Costos y Precios, Análisis Económico, Análisis Financiero) más 4 de Datos y Sistemas, con escala Sí / Más o menos / No; (3) evaluación final con los cortes 40 % y 70 %, lectura por bloque, brecha, por dónde empezar y calculadora de rentabilidad opcional. Los campos obligatorios avisan qué falta. Se envía sin salir de la página con Web3Forms (`WEB3FORMS_KEY`); sin clave, o si el servicio falla, abre el programa de correo. También se puede copiar. Si `CALENDAR_URL` tiene un enlace, ofrece elegir horario
 
 ## Archivos
@@ -57,5 +57,5 @@ Enlace directo: `demo/#demo-<clave>`. El botón "Copiar enlace" del modal lo gen
 - Dominio (revisar disponibilidad de dominio y marca en INPI). El logo actual (cubo 07) puede cambiar.
 - Contacto: Web3Forms escribe a una sola casilla por clave (`WEB3FORMS_KEY`); para que el diagnóstico llegue a las dos de `CONTACT_EMAILS`, reenviar desde esa casilla o sumar la otra en el panel de Web3Forms.
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
-- Sección "Quiénes confían en nosotros": cargar en `TESTIMONIOS` solo clientes reales que autorizaron, con su cita textual.
+- Confían en nosotros: sumar testimonios (`TESTIMONIOS`) solo de clientes que autorizaron, con su cita textual. Para un logo nuevo: SVG de un solo color en `files/clientes/` y una línea en `CLIENTES`.
 - Comercios, Logística y Construcción no tienen caso publicado; los textos de esos sectores son un borrador para revisar.
