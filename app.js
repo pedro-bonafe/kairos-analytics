@@ -150,7 +150,129 @@
       <defs><linearGradient id="gMap" gradientUnits="userSpaceOnUse" x1="0" y1="${H}" x2="${W}" y2="0">${STOPS}</linearGradient></defs>
       ${cells}</svg>`;
   }
-  const GRAFICOS = { bars, map };
+  /* ------------------------------------------------------------------------
+     Gráficos por sector. Todos comparten las clases de animación de .gfx:
+     grow (crece desde la base), pop (aparece desde el centro), drop (cae y
+     se apila) y draw (el trazo se dibuja). Se disparan con .graphic-panel.in.
+     ------------------------------------------------------------------------ */
+  const gfx = (el, id, W, H, label, body, grad = `x1="0" y1="${H}" x2="${W}" y2="0"`) => {
+    el.innerHTML = `<svg class="gfx" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}">
+      <defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" ${grad}>${STOPS}</linearGradient></defs>
+      ${body}</svg>`;
+  };
+
+  // Industrias: margen por línea de producto, con barras en forma de fábrica
+  // (techo de diente de sierra, ventanas y chimenea con humo).
+  function factories(el) {
+    const W = 408, H = 250, BASE = 236, FW = 52, GAP = 16, X0 = 8, MAX = 150;
+    const pct = [58, 74, 34, 92, 66, 82];
+    let body = `<path class="gfx-ground" d="M0 ${BASE + .5}H${W}"/>`;
+    pct.forEach((p, i) => {
+      const x = X0 + i * (FW + GAP), top = BASE - MAX * p / 100, half = FW / 2;
+      const roof = `${x},${top} ${x + half},${top - 14} ${x + half},${top} ${x + FW},${top - 14} ${x + FW},${top}`;
+      let win = "";
+      for (let y = top + 14; y < BASE - 18; y += 22) for (let k = 0; k < 3; k++) win += `<rect class="gfx-win" x="${x + 8 + k * 14}" y="${y}" width="8" height="10"/>`;
+      body += `<g class="grow${i === 2 ? " bar-alert" : ""}" style="--d:${i * 90}ms" fill="url(#gFab)">
+          <rect x="${x + FW - 14}" y="${top - 40}" width="8" height="40"/>
+          <polygon points="${roof}"/>
+          <rect x="${x}" y="${top}" width="${FW}" height="${BASE - top}"/>
+          ${win}
+        </g>
+        <circle class="smoke" style="--d:${1000 + i * 380}ms" cx="${x + FW - 10}" cy="${top - 48}" r="5"/>`;
+    });
+    gfx(el, "gFab", W, H, "Seis fábricas de distinta altura: el margen de cada línea de producto, con la tercera más baja en alerta", body,
+      `x1="0" y1="0" x2="${W}" y2="0"`);
+  }
+
+  // Comercios: una vidriera con toldo y góndolas; los huecos son faltantes.
+  function shop(el) {
+    const W = 408, H = 262, SEG = 51;
+    let body = "";
+    for (let i = 0; i < 8; i++) {
+      const x = i * SEG, f = i % 2 ? "var(--surface-2)" : "url(#gShop)";
+      body += `<rect class="pop" style="--d:${i * 50}ms" x="${x}" y="4" width="${SEG}" height="22" fill="${f}"/>
+        <path class="pop" style="--d:${i * 50}ms" d="M${x} 26a${SEG / 2} ${SEG / 2 - 8} 0 0 0 ${SEG} 0z" fill="${f}"/>`;
+    }
+    body += `<rect class="gfx-frame" x="14" y="58" width="${W - 28}" height="${H - 62}" rx="4"/>`;
+    const falta = [[3, 4], [8], [1, 6, 7]];
+    [110, 172, 234].forEach((y, r) => {
+      body += `<path class="gfx-shelf" d="M26 ${y + .5}H${W - 26}"/>`;
+      for (let k = 0; k < 11; k++) {
+        const x = 31 + k * 32, h = 30 + ((k * 7 + r * 5) % 4) * 4;
+        body += falta[r].includes(k)
+          ? `<rect class="gfx-falta" x="${x}" y="${y - 34}" width="26" height="34" rx="2"/>`
+          : `<rect class="grow" style="--d:${300 + r * 160 + k * 30}ms" x="${x}" y="${y - h}" width="26" height="${h}" rx="2" fill="url(#gShop)"/>`;
+      }
+    });
+    gfx(el, "gShop", W, H, "Una vidriera con toldo y tres góndolas con productos; los huecos marcados son faltantes de stock", body);
+  }
+
+  // Logística: un mapa de celdas con rutas que salen del depósito y se trazan
+  // hasta cada entrega.
+  function routes(el) {
+    const C = 32, COLS = 13, ROWS = 8, W = COLS * C, H = ROWS * C, P = (c) => c * C + C / 2;
+    const rutas = [
+      [[6, 4], [6, 1], [11, 1], [11, 3]],
+      [[6, 4], [2, 4], [2, 1]],
+      [[6, 4], [9, 4], [9, 6], [12, 6]],
+      [[6, 4], [6, 7], [1, 7], [1, 5]],
+    ];
+    let body = "";
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++)
+      body += `<rect class="cell-off" x="${c * C + 2}" y="${r * C + 2}" width="${C - 4}" height="${C - 4}"/>`;
+    rutas.forEach((ru, i) => {
+      const d = ru.map(([c, r], j) => `${j ? "L" : "M"}${P(c)} ${P(r)}`).join("");
+      body += `<path class="gfx-route draw" style="--d:${300 + i * 260}ms" pathLength="1" d="${d}"/>`;
+      ru.slice(1).forEach(([c, r], j) => {
+        const fin = j === ru.length - 2, s = fin ? 18 : 10;
+        body += `<rect class="pop" style="--d:${300 + i * 260 + (j + 1) * 260}ms" x="${P(c) - s / 2}" y="${P(r) - s / 2}" width="${s}" height="${s}" rx="${fin ? 3 : 2}" fill="url(#gRoute)"/>`;
+      });
+    });
+    body += `<rect class="pop" style="--d:0ms" x="${P(6) - 15}" y="${P(4) - 15}" width="30" height="30" rx="4" fill="var(--ink)"/>`;
+    gfx(el, "gRoute", W, H, "Mapa de celdas con cuatro rutas de reparto que salen de un depósito central hasta los puntos de entrega", body);
+  }
+
+  // Construcción: tres obras que se levantan con bloques apilados; la línea
+  // punteada es la altura que marca el presupuesto a esta fecha.
+  function blocks(el) {
+    const W = 408, H = 260, BASE = 250, TW = 104, GAP = 44, BH = 17;
+    const obras = [[11, 10], [9, 9], [11, 6]]; // [previsto, real] en hileras
+    let body = `<path class="gfx-ground" d="M0 ${BASE + .5}H${W}"/>`;
+    obras.forEach(([prev, real], t) => {
+      const x0 = 4 + t * (TW + GAP);
+      for (let r = 0; r < real; r++) {
+        const y = BASE - (r + 1) * BH, piezas = r % 2 ? [13, 26, 26, 26, 13] : [26, 26, 26, 26];
+        let x = x0;
+        piezas.forEach((w) => {
+          body += `<rect class="drop" style="--d:${t * 160 + r * 90}ms" x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${BH - 2}" rx="1.5" fill="url(#gBlk)"/>`;
+          x += w;
+        });
+      }
+      body += `<rect class="gfx-plan${real < prev * .7 ? " bar-alert" : ""}" x="${x0 - 3}" y="${BASE - prev * BH - 3}" width="${TW + 6}" height="${prev * BH + 3}" rx="3"/>`;
+    });
+    gfx(el, "gBlk", W, H, "Tres obras hechas de bloques apilados junto a la altura prevista por el presupuesto; la tercera va atrasada", body);
+  }
+
+  // Ministerios: la conducción en el centro, conectada con cada área y sus
+  // expedientes en una base común.
+  function network(el) {
+    const W = 408, H = 260, CX = W / 2, CY = H / 2, N = 6, f = (n) => n.toFixed(1);
+    let lines = "", nodes = "";
+    for (let i = 0; i < N; i++) {
+      const a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      const ax = CX + 128 * Math.cos(a), ay = CY + 86 * Math.sin(a);
+      lines += `<path class="gfx-link draw" style="--d:${200 + i * 120}ms" pathLength="1" d="M${CX} ${CY}L${f(ax)} ${f(ay)}"/>`;
+      nodes += `<rect class="pop" style="--d:${500 + i * 120}ms" x="${f(ax - 11)}" y="${f(ay - 11)}" width="22" height="22" rx="3" fill="url(#gNet)"/>`;
+      [-.22, .22].forEach((da, k) => {
+        const bx = CX + 184 * Math.cos(a + da), by = CY + 118 * Math.sin(a + da);
+        lines += `<path class="gfx-sub draw" style="--d:${900 + i * 120 + k * 80}ms" pathLength="1" d="M${f(ax)} ${f(ay)}L${f(bx)} ${f(by)}"/>`;
+        nodes += `<rect class="pop" style="--d:${1100 + i * 120 + k * 80}ms" x="${f(bx - 5)}" y="${f(by - 5)}" width="10" height="10" rx="2" fill="url(#gNet)"/>`;
+      });
+    }
+    nodes += `<rect class="pop" style="--d:0ms" x="${CX - 18}" y="${CY - 18}" width="36" height="36" rx="4" fill="var(--ink)"/>`;
+    gfx(el, "gNet", W, H, "Red con la conducción en el centro conectada a seis áreas, cada una con sus expedientes", lines + nodes);
+  }
+  const GRAFICOS = { bars, map, factories, shop, routes, blocks, network };
   mosaic($("#mosaic"));
 
   /* ------------------------------------------------------------------------
@@ -273,6 +395,7 @@
 
   function renderVertical(id) {
     const v = VERTICALES.find((x) => x.id === id), x = sector[v.sector];
+    const g = v.grafico ? v : x; // una vertical puede tener su propio gráfico
     let html = `<div class="swap"><p class="sector-bajada label">${esc(v.bajada)}</p>`;
     if (x) html += `
       <div class="sector split">
@@ -286,9 +409,9 @@
         </div>
         <figure class="graphic">
           <div class="graphic-panel">
-            <div class="graphic-${x.grafico}" data-grafico="${x.grafico}"></div>
-            <div class="graphic-axis label-sm">${x.graficoEje.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
-            <div class="label-sm">${esc(x.graficoNota)}</div>
+            <div class="graphic-${g.grafico}" data-grafico="${g.grafico}"></div>
+            <div class="graphic-axis label-sm">${g.graficoEje.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
+            <div class="label-sm">${esc(g.graficoNota)}</div>
           </div>
         </figure>
       </div>

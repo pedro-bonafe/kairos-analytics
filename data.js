@@ -99,9 +99,9 @@ const AMBITOS = [
    -------------------------------------------------------------------------- */
 const SECTORES = [
   {
-    id: "industria", nombre: "Industrias", grafico: "bars",
-    graficoEje: ["S1", "alerta en S9", "S13"],
-    graficoNota: "flujo de fondos proyectado · datos de ejemplo",
+    id: "industria", nombre: "Industrias", grafico: "factories",
+    graficoEje: ["línea 1", "margen bajo en la línea 3", "línea 6"],
+    graficoNota: "margen de contribución por línea de producto · datos de ejemplo",
     frase: "Tus costos, tu caja y tu operación, en un solo lugar y al día.",
     d: "Empresas productivas y exportadoras: metalúrgicas, fábricas de maquinaria, alimentos, agroindustria y producción apícola. Tienen un ERP que registra bien la operación, pero las respuestas de gestión se siguen armando a mano.",
     rasgos: [
@@ -136,9 +136,9 @@ const SECTORES = [
   },
   // Sectores sin caso publicado todavía: se muestra el contexto y los ejes.
   {
-    id: "comercio", nombre: "Comercios", grafico: "bars",
-    graficoEje: ["S1", "alerta en S9", "S13"],
-    graficoNota: "flujo de fondos proyectado · datos de ejemplo",
+    id: "comercio", nombre: "Comercios", grafico: "shop",
+    graficoEje: ["con stock", "huecos: faltantes a reponer"],
+    graficoNota: "stock por góndola · datos de ejemplo",
     frase: "Qué vendés, qué te deja y qué reponer, sin esperar al cierre.",
     d: "Mayoristas, minoristas, distribuidoras y cadenas con varias sucursales. Venden todos los días, pero el margen real y el estado del stock se conocen tarde.",
     rasgos: [
@@ -154,9 +154,9 @@ const SECTORES = [
     ],
   },
   {
-    id: "logistica", nombre: "Logística", grafico: "map",
-    graficoEje: ["menos entregas", "más entregas"],
-    graficoNota: "entregas por zona · datos de ejemplo",
+    id: "logistica", nombre: "Logística", grafico: "routes",
+    graficoEje: ["depósito", "entregas del día"],
+    graficoNota: "rutas de reparto · datos de ejemplo",
     frase: "Cada viaje, cada entrega y cada costo, a la vista.",
     d: "Transportistas, operadores logísticos y depósitos. Mueven mucho volumen con márgenes finos, y el costo real de cada viaje o de cada cliente no suele estar claro.",
     rasgos: [
@@ -172,9 +172,9 @@ const SECTORES = [
     ],
   },
   {
-    id: "construccion", nombre: "Construcción", grafico: "bars",
-    graficoEje: ["S1", "alerta en S9", "S13"],
-    graficoNota: "flujo de fondos consolidado de obras · datos de ejemplo",
+    id: "construccion", nombre: "Construcción", grafico: "blocks",
+    graficoEje: ["obra 1", "obra 2", "obra 3 atrasada"],
+    graficoNota: "avance real contra presupuesto (línea punteada) · datos de ejemplo",
     frase: "Cada obra con su costo, su avance y su caja.",
     d: "Constructoras y desarrollistas. Cada obra es un proyecto con su presupuesto, sus certificaciones y sus pagos, y cuesta ver a tiempo si se está desviando.",
     rasgos: [
@@ -319,6 +319,8 @@ const VERTICALES = [
   { id: "construccion", ambito: "privado", sector: "construccion", nombre: "Construcción", bajada: "Constructoras y desarrollistas", grupos: [] },
   {
     id: "ministerios", ambito: "publico", sector: "gobierno",
+    grafico: "network", graficoEje: ["conducción al centro", "áreas y expedientes alrededor"],
+    graficoNota: "áreas conectadas a una base común · datos de ejemplo",
     nombre: "Ministerios",
     bajada: "Ministerios y secretarías",
     intro: "Herramientas con las que un organismo registra su trabajo, lo ve consolidado y lo consulta en lenguaje natural, sin obligar a las áreas a cambiar todo de un día para otro.",

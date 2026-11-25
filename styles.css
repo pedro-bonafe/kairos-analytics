@@ -216,7 +216,7 @@ section { padding-block: var(--section-y); border-top: 1px solid var(--line); }
               var(--bg);
   border: 1px solid var(--line); border-radius: var(--radius);
 }
-.graphic-bars, .graphic-map, .graphic-axis { width: 408px; max-width: 100%; }
+.graphic-panel > [data-grafico], .graphic-axis { width: 408px; max-width: 100%; }
 .bars, .map { display: block; width: 100%; height: auto; }
 .map .cell-off { fill: var(--surface-2); }
 .bars rect, .map .cell-on { transform-box: fill-box; transition: transform .8s var(--ease) var(--d), opacity .6s var(--ease) var(--d); }
@@ -354,7 +354,9 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal, .method .rule-item { opacity: 1; transform: none; }
-  .method-track i, .bars rect, .map .cell-on, .mosaic .cell-on { transform: none; opacity: 1; }
+  .method-track i, .bars rect, .map .cell-on, .mosaic .cell-on, .gfx :is(.grow, .pop, .drop) { transform: none; opacity: 1; }
+  .gfx .draw { stroke-dashoffset: 0; }
+  .gfx .smoke { display: none; }
   html { scroll-behavior: auto; }
 }
 
@@ -524,8 +526,9 @@ table.t select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--l
 @media (max-width: 640px) { .demo-back { display: none; } }
 
 /* ---------- Cómo trabajamos: una columna por eje ---------- */
-.method-cols { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
-.method-head { border-top: 1px solid var(--line-strong); padding: 24px 0 8px; display: grid; gap: 6px; }
+.method-cols { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; }
+.method-col { display: grid; grid-template-rows: subgrid; grid-row: span 2; }
+.method-head { border-top: 1px solid var(--line-strong); padding: 24px 0 8px; display: grid; gap: 6px; align-content: start; }
 .method-verbo { font-size: clamp(32px, 3.4vw, 48px); line-height: 1; font-weight: 800; letter-spacing: -0.045em; }
 .method-nombre { font-size: 15px; font-weight: 500; color: var(--ink-2); }
 .method-pasos { list-style: none; margin: 0; padding: 0; }
@@ -533,4 +536,29 @@ table.t select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--l
 .method-pasos .rule-item > b { font-size: 17px; }
 @media (max-width: 1000px) {
   .method-cols { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .method-col { grid-template-rows: none; grid-row: auto; }
 }
+
+/* ---------- Gráficos por sector (.gfx) ---------- */
+.gfx { display: block; width: 100%; height: auto; overflow: visible; }
+.gfx .cell-off { fill: var(--surface-2); }
+.gfx-ground { stroke: var(--line-strong); stroke-width: 1; }
+.gfx-shelf { stroke: var(--line-strong); stroke-width: 3; }
+.gfx-frame { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+.gfx-win { fill: var(--bg); opacity: .55; }
+.gfx-falta { fill: none; stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.gfx-plan { fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.gfx-route { fill: none; stroke: url(#gRoute); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.gfx-link { fill: none; stroke: url(#gNet); stroke-width: 2.5; stroke-linecap: round; }
+.gfx-sub { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+.gfx :is(.grow, .pop, .drop) { transform-box: fill-box; transition: transform .7s var(--ease) var(--d), opacity .5s var(--ease) var(--d); }
+.gfx .grow { transform-origin: bottom; transform: scaleY(0); }
+.gfx .pop { transform-origin: center; transform: scale(0); }
+.gfx .drop { transform: translateY(-40px); opacity: 0; transition-duration: .45s; }
+.gfx .draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s var(--ease) var(--d); }
+.graphic-panel.in .gfx :is(.grow, .pop, .drop) { transform: none; opacity: 1; }
+.graphic-panel.in .gfx .draw { stroke-dashoffset: 0; }
+.graphic-panel.in .gfx .bar-alert, .graphic-panel.in .gfx-falta { animation: alertPulse 2.4s ease-in-out 1.6s infinite; }
+.gfx .smoke { fill: var(--ink-3); opacity: 0; transform-box: fill-box; transform-origin: center; }
+.graphic-panel.in .gfx .smoke { animation: smoke 3.2s ease-out var(--d) infinite; }
+@keyframes smoke { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 25% { opacity: .45; } 100% { opacity: 0; transform: translate(8px, -30px) scale(1.6); } }
