@@ -14,7 +14,7 @@ Página estática (HTML, CSS y JavaScript sin dependencias ni compilación). Abr
 6. **Por qué nosotros**: seis diferenciales
 7. **Equipo**
 8. **Quiénes confían en nosotros**: oculta hasta cargar `TESTIMONIOS` en `data.js`
-9. **Diagnóstico inicial y reunión**: tres pasos (datos de la empresa, cuestionario de madurez de `DIAGNOSTICO`, resultado por eje). Envía todo por correo y, si `CALENDAR_URL` tiene un enlace, ofrece elegir horario
+9. **Diagnóstico inicial y reunión**: tres pasos. (1) Datos de la empresa; (2) las 14 preguntas de la Auditoría Express de Agustín (Costos y Precios, Análisis Económico, Análisis Financiero) más 4 de Datos y Sistemas, con escala Sí / Más o menos / No; (3) evaluación final con los cortes 40 % y 70 %, lectura por bloque, brecha, por dónde empezar y calculadora de rentabilidad opcional. Los campos obligatorios avisan qué falta. Envía todo por correo (o se copia) y, si `CALENDAR_URL` tiene un enlace, ofrece elegir horario
 
 ## Archivos
 
@@ -58,6 +58,5 @@ Enlace directo: `index.html#demo-<clave>`. El botón "Copiar enlace" del modal l
 - Equipo: la maestría y la especialización terminan en 2026; al recibirse, pasar "Mg." y "Esp." a "Magíster" y "Especialista".
 - Sección "Quiénes confían en nosotros": cargar en `TESTIMONIOS` solo clientes reales que autorizaron, con su cita textual.
 - Agenda: completar `CALENDAR_URL` (Google Calendar con programación de citas, Calendly o Cal.com).
-- Diagnóstico: sumar las preguntas del cuestionario que ya tiene armado Agustín (`DIAGNOSTICO.preguntas`).
 - Comercios, Logística y Construcción no tienen caso publicado; los textos de esos sectores son un borrador para revisar.
 - Imagen para compartir (`og:image`, 1200 × 630) cuando haya logo.
