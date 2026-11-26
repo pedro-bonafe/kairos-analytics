@@ -58,7 +58,7 @@ const SERVICIOS = [
     frase: "Entendé y decidí con tus números reales, no con una planilla desactualizada.",
     problema: "Sabés cuánto vendés, pero no siempre la rentabilidad de tus productos o servicios, si tus precios cubren los costos o cuánta plata vas a tener el mes que viene. Y muchas veces esos números viven en una planilla que solo entiende quien la armó.",
     solucion: "Ordenamos tu estructura de costos, analizamos y medimos cuánto aporta cada unidad de negocio. Armamos tu estado de resultados y tu flujo de fondos (cash flow) proyectado con tableros, y lo volcamos a una herramienta simple, que tu equipo puede usar de forma autónoma y que se actualiza sola con tus datos.",
-    mejora: "Sabés qué productos te convienen, cuál es el punto de equilibrio de tu empresa y cuándo puede faltar caja, con tiempo para decidir con previsibilidad.",
+    mejora: "Sabés qué productos te convienen, qué unidad de negocio es más rentable, cuál es el punto de equilibrio de tu empresa y cuándo puede faltar caja, con tiempo para decidir con previsibilidad.",
     items: [
       ["Esquemas de costeo", "Por producto, por línea y por centro de costos."],
       ["Modelo económico", "Estado de resultados de gestión, margen de contribución y punto de equilibrio."],
@@ -258,7 +258,7 @@ const VERTICALES = [
               "Reglas de clasificación como dato, con historial de vigencia",
               "Extracción incremental del ERP, reutilizable por módulos futuros",
             ],
-            mas: "El diagnóstico llegó al nivel de fórmulas y código y detectó inconsistencias que el proceso arrastraba. El plan está dividido en fases: validación técnica, extracción, finanzas, rentabilidad y cierre. Todavía no hay resultados medidos.",
+            mas: "El diagnóstico llegó al nivel de fórmulas y código y detectó inconsistencias que el proceso arrastraba. El plan está dividido en fases: validación técnica, extracción, finanzas, rentabilidad y cierre.",
             arqTitulo: "arquitectura propuesta",
             arq: [
               ["Origen", "El ERP (Odoo). Los tableros nunca consultan en vivo la base de producción."],
@@ -421,7 +421,7 @@ const VERTICALES = [
               "Geolocalización de la dirección y ajuste del pin",
               "Panel simple para cambiar estados",
             ],
-            mas: "Mapas abiertos, sin claves ni costo por uso. Requiere definir con el municipio la política de moderación antes de publicar.",
+            mas: "Mapas abiertos, sin claves ni costo por uso.",
             arq: [
               ["Aplicación", "Next.js con TypeScript: el mapa público y el panel de administración en una sola aplicación."],
               ["Mapa", "Leaflet sobre OpenStreetMap, con geocodificación abierta: sin claves ni costo por uso."],
