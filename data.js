@@ -201,9 +201,9 @@ const PASOS = [
     ["Automatización", "Lo que hoy es exportar, copiar y transcribir pasa a ser automático, con agentes de IA donde suman y con controles."],
   ] },
   { eje: "finanzas", pasos: [
-    ["Estructura de costos", "Ordenamos los costos por producto, por línea y por centro de costos, junto con quienes los conocen."],
+    ["Estructura de costos", "Luego de un diagnóstico general, ordenamos los costos por producto, por línea y por centro de costos, codo a codo con el equipo de administración de tu empresa."],
     ["Modelo económico y financiero", "Armamos el estado de resultados de gestión, el punto de equilibrio y el flujo de fondos proyectado."],
-    ["Tableros y seguimiento", "Llevamos los números a tableros que se actualizan con tus datos y los revisamos con vos cada mes."],
+    ["Tableros y seguimiento", "Llevamos los números a tableros que se actualizan con tus datos y te acompañamos en su análisis cada mes, para que cuentes con nuestro asesoramiento en cada decisión."],
   ] },
   { eje: "software", pasos: [
     ["Especificación", "Documentamos qué va a hacer cada módulo y lo validamos con quienes lo van a usar."],
